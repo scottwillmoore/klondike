@@ -1,10 +1,12 @@
+use std::io::{stdin, stdout, Result, Write};
+
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
 use rand_xoshiro::Xoshiro256PlusPlus;
 
 use klondike::*;
 
-pub fn main() {
+pub fn main() -> Result<()> {
     let mut deck = deck();
 
     let seed = 0;
@@ -13,5 +15,21 @@ pub fn main() {
 
     let state = State::new(&deck);
 
-    println!("{}", state);
+    loop {
+        println!();
+        print!("> ");
+        stdout().flush()?;
+        let mut line = String::new();
+        stdin().read_line(&mut line)?;
+        println!();
+
+        match line.to_lowercase().trim() {
+            "q" => {
+                return Ok(());
+            }
+            _ => {
+                println!("{}", state);
+            }
+        }
+    }
 }

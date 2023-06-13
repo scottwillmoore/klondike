@@ -27,9 +27,9 @@ impl Foundation {
 
 impl std::fmt::Display for Foundation {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let foundation = self.piles.map(|pile| format!("{}", pile)).join(" ");
+        let cards = self.piles.map(|pile| format!("{}", pile)).join(" ");
 
-        write!(formatter, "{}", foundation)
+        write!(formatter, "{}", cards)
     }
 }
 
@@ -52,14 +52,22 @@ impl std::fmt::Display for Stock {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let (top_cards, bottom_cards) = self.cards.split_at(self.bottom_index);
 
-        let stack = bottom_cards
+        let (bottom_cards, top_cards, top_card) =
+            if let Some((top_card, top_cards)) = top_cards.split_last() {
+                (bottom_cards, top_cards, top_card)
+            } else {
+                let (top_card, bottom_cards) = bottom_cards.split_last().unwrap();
+                (bottom_cards, top_cards, top_card)
+            };
+
+        let cards = bottom_cards
             .iter()
             .chain(top_cards.iter())
             .map(|card| format!("{}", card))
             .collect::<Vec<String>>()
             .join(" ");
 
-        write!(formatter, "{}", stack)
+        write!(formatter, "{} ({})", cards, top_card)
     }
 }
 
@@ -94,7 +102,7 @@ impl std::fmt::Display for Pile {
             .collect::<Vec<String>>()
             .join(" ");
 
-        write!(formatter, "{:<32}{}", face_down, face_up)
+        write!(formatter, "{:<17} ({})", face_down, face_up)
     }
 }
 
@@ -165,8 +173,10 @@ impl State {
 
 impl std::fmt::Display for State {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(formatter, "FOUNDATION\n{}\n", self.foundation)?;
-        writeln!(formatter, "STOCK\n{}\n", self.stock)?;
-        writeln!(formatter, "TABLEAU\n{}\n", self.tableau)
+        write!(
+            formatter,
+            "{}\n\n{}\n\n{}",
+            self.foundation, self.stock, self.tableau
+        )
     }
 }
