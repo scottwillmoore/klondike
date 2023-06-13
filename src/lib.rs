@@ -1,5 +1,5 @@
 mod card;
-mod deck;
+mod game;
 
 pub use card::*;
-pub use deck::*;
+pub use game::*;

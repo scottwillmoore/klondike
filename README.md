@@ -10,6 +10,14 @@
 - [x] Use a seedable random number generator
 - [ ] Create game state
 
+## Rules
+
+Stock
+Waste
+
+Piles
+Foundations
+
 ## References
 
 ### Solitaire
