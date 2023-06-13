@@ -22,6 +22,7 @@
       };
     in {
       devShells.default = packages.mkShell {
+        name = "klondike";
         nativeBuildInputs = [
           packages.fenix.stable.toolchain
         ];

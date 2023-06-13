@@ -6,3 +6,4 @@
 
 - https://en.wikipedia.org/wiki/Solitaire
 - https://en.wikipedia.org/wiki/Klondike_(solitaire)
+- https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
