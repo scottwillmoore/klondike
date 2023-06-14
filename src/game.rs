@@ -7,6 +7,30 @@ use crate::card::*;
 // https://docs.rs/arrayvec/latest/arrayvec/index.html
 // https://docs.rs/enum-map/latest/enum_map/index.html
 
+// FoundationIndex = Suit = {Clubs, Diamonds, Hearts, Spades}
+// Foundation (piles: [FoundationPile; 4])
+// FoundationPile (rank: Rank)
+// Stock (cards: Vec<Card>)
+// TableauIndex = 7 = {A, B, C, D, E, F, G}
+// Tableau (piles: [TableauPile; 7])
+// TableauPile (...)
+
+struct FoundationIndex(Suit);
+
+// struct TableauIndex(usize);
+
+enum TableauIndex {
+    // A, Stock
+    // B, Foundation
+    C,
+    D,
+    E,
+    F,
+    G,
+    H,
+    I,
+}
+
 #[derive(Debug)]
 struct Foundation {
     piles: [Card; 4],
@@ -169,6 +193,19 @@ impl State {
             tableau: Tableau::new(tableau_cards),
         }
     }
+}
+
+pub enum Transition {
+    Draw,
+    Move,
+    StockToPile { to: usize },
+    StockToFoundation { to: Suit },
+    PileToPile { from: usize, size: usize, to: usize },
+    PileToFoundation { from: usize, to: Suit },
+    // Stock to pile (1)
+    // Stock to foundation (1)
+    // Pile to pile (1..n)
+    // Pile to foundation (1)
 }
 
 impl std::fmt::Display for State {

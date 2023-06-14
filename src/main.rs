@@ -7,10 +7,10 @@ use rand_xoshiro::Xoshiro256PlusPlus;
 use klondike::*;
 
 pub fn main() -> Result<()> {
-    let mut deck = deck();
-
     let seed = 0;
     let mut random = Xoshiro256PlusPlus::seed_from_u64(seed);
+
+    let mut deck = deck();
     deck.shuffle(&mut random);
 
     let state = State::new(&deck);
@@ -24,12 +24,14 @@ pub fn main() -> Result<()> {
         println!();
 
         match line.to_lowercase().trim() {
-            "q" => {
-                return Ok(());
+            "q" | "quit" => {
+                break;
             }
             _ => {
                 println!("{}", state);
             }
         }
     }
+
+    Ok(())
 }
