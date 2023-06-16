@@ -23,29 +23,28 @@ pub const RANKS: [Rank; 13] = [
 ];
 
 impl Rank {
-    pub fn as_str(self) -> &'static str {
+    pub fn into_char(self) -> char {
         match self {
-            Ace => "A",
-            Two => "2",
-            Three => "3",
-            Four => "4",
-            Five => "5",
-            Six => "6",
-            Seven => "7",
-            Eight => "8",
-            Nine => "9",
-            Ten => "0",
-            // Ten => "10",
-            Jack => "J",
-            Queen => "Q",
-            King => "K",
+            Ace => 'A',
+            Two => '2',
+            Three => '3',
+            Four => '4',
+            Five => '5',
+            Six => '6',
+            Seven => '7',
+            Eight => '8',
+            Nine => '9',
+            Ten => 'T',
+            Jack => 'J',
+            Queen => 'Q',
+            King => 'K',
         }
     }
 }
 
 impl std::fmt::Display for Rank {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "{}", self.as_str())
+        write!(formatter, "{}", self.into_char())
     }
 }
 
@@ -65,23 +64,19 @@ pub const SUITS: [Suit; 4] = [
 ];
 
 impl Suit {
-    pub fn as_str(self) -> &'static str {
+    pub fn into_char(self) -> char {
         match self {
-            Club => "♣",
-            // Club => "C",
-            Diamond => "♦",
-            // Diamond => "D",
-            Heart => "♥",
-            // Heart => "H",
-            Spade => "♠",
-            // Spade => "S",
+            Club => 'C',
+            Diamond => 'D',
+            Heart => 'H',
+            Spade => 'S',
         }
     }
 }
 
 impl std::fmt::Display for Suit {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "{}", self.as_str())
+        write!(formatter, "{}", self.into_char())
     }
 }
 
@@ -94,6 +89,14 @@ pub struct Card {
 impl Card {
     pub fn new(rank: Rank, suit: Suit) -> Card {
         Card { rank, suit }
+    }
+
+    pub fn rank(self) -> Rank {
+        self.rank
+    }
+
+    pub fn suit(self) -> Suit {
+        self.suit
     }
 }
 
@@ -114,3 +117,6 @@ pub fn deck() -> Vec<Card> {
 
     cards
 }
+
+#[cfg(test)]
+mod test;

@@ -1,0 +1,11 @@
+[package]
+name = "enum-trait"
+
+edition.workspace = true
+version.workspace = true
+
+[lib]
+path = "lib.rs"
+
+[dev-dependencies]
+paste = "1.0.12"

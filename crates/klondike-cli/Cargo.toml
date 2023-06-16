@@ -1,0 +1,12 @@
+[package]
+name = "klondike-cli"
+
+edition.workspace = true
+version.workspace = true
+
+[[bin]]
+name = "klondike-cli"
+path = "main.rs"
+
+[dependencies]
+klondike.workspace = true

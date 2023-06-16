@@ -1,0 +1,8 @@
+[package]
+name = "card"
+
+edition.workspace = true
+version.workspace = true
+
+[lib]
+path = "lib.rs"

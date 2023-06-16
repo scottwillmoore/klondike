@@ -1,8 +1,12 @@
-[package]
-name = "klondike"
-version = "0.0.0"
-edition = "2021"
+[workspace]
+members = ["crates/*"]
 
-[dependencies]
-rand = "0.8.5"
-rand_xoshiro = "0.6.0"
+[workspace.package]
+edition = "2021"
+version = "0.0.0"
+
+[workspace.dependencies]
+card = { path = "crates/card" }
+enum-trait = { path = "crates/enum-trait" }
+enum-trait-derive = { path = "crates/enum-trait-derive" }
+klondike = { path = "crates/klondike" }

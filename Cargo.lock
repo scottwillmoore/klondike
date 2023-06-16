@@ -3,10 +3,25 @@
 version = 3
 
 [[package]]
+name = "card"
+version = "0.0.0"
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+
+[[package]]
+name = "enum-trait"
+version = "0.0.0"
+dependencies = [
+ "paste",
+]
+
+[[package]]
+name = "enum-trait-derive"
+version = "0.0.0"
 
 [[package]]
 name = "getrandom"
@@ -23,8 +38,16 @@ dependencies = [
 name = "klondike"
 version = "0.0.0"
 dependencies = [
+ "card",
  "rand",
  "rand_xoshiro",
+]
+
+[[package]]
+name = "klondike-cli"
+version = "0.0.0"
+dependencies = [
+ "klondike",
 ]
 
 [[package]]
@@ -32,6 +55,12 @@ name = "libc"
 version = "0.2.146"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f92be4933c13fd498862a9e02a3055f8a8d9c039ce33db97306fd5a6caa7f29b"
+
+[[package]]
+name = "paste"
+version = "1.0.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9f746c4065a8fa3fe23974dd82f15431cc8d40779821001404d10d2e79ca7d79"
 
 [[package]]
 name = "ppv-lite86"

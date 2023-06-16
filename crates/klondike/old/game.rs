@@ -15,37 +15,48 @@ use crate::card::*;
 // Tableau (piles: [TableauPile; 7])
 // TableauPile (...)
 
+trait Enum {
+    const LENGTH: usize;
+
+    fn from_usize(from: usize) -> Self;
+    fn into_usize(self) -> usize;
+}
+
+impl Enum for Suit {
+    const LENGTH: usize = 4;
+
+    fn from_usize(from: usize) -> Self {
+        match from {
+            0 => Club,
+            1 => Diamond,
+            2 => Heart,
+            3 => Spade,
+            _ => unreachable!(),
+        }
+    }
+
+    fn into_usize(self) -> usize {
+        match self {
+            Club => 0,
+            Diamond => 1,
+            Heart => 2,
+            Spade => 3,
+        }
+    }
+}
+
 struct FoundationIndex(Suit);
 
-// struct TableauIndex(usize);
-
-enum TableauIndex {
-    // A, Stock
-    // B, Foundation
-    C,
-    D,
-    E,
-    F,
-    G,
-    H,
-    I,
-}
+struct FoundationPile(Rank);
 
 #[derive(Debug)]
 struct Foundation {
-    piles: [Card; 4],
+    piles: [Suit; 4],
 }
 
 impl Foundation {
     pub fn new() -> Foundation {
-        let piles = [
-            Card::new(Ace, Club),
-            Card::new(Ace, Diamond),
-            Card::new(Ace, Heart),
-            Card::new(Ace, Spade),
-        ];
-
-        Foundation { piles }
+        Foundation { piles: SUITS }
     }
 }
 
@@ -193,19 +204,6 @@ impl State {
             tableau: Tableau::new(tableau_cards),
         }
     }
-}
-
-pub enum Transition {
-    Draw,
-    Move,
-    StockToPile { to: usize },
-    StockToFoundation { to: Suit },
-    PileToPile { from: usize, size: usize, to: usize },
-    PileToFoundation { from: usize, to: Suit },
-    // Stock to pile (1)
-    // Stock to foundation (1)
-    // Pile to pile (1..n)
-    // Pile to foundation (1)
 }
 
 impl std::fmt::Display for State {

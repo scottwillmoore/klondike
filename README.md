@@ -8,7 +8,7 @@
 - [x] Create deck
 - [x] Shuffle deck
 - [x] Use a seedable random number generator
-- [ ] Create game state
+- [x] Create game state
 - [ ] CLI
 - [ ] TUI
 - [ ] GUI (Web-based)

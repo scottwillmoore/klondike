@@ -1,0 +1,8 @@
+[package]
+name = "enum-trait-derive"
+
+edition.workspace = true
+version.workspace = true
+
+[lib]
+path = "lib.rs"
