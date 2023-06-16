@@ -1,12 +1,11 @@
 [package]
-name = "enum-trait-derive"
+name = "enum-map"
 
 edition.workspace = true
 version.workspace = true
 
 [lib]
 path = "lib.rs"
-proc-macro = true
 
 [dependencies]
 enum-trait.workspace = true

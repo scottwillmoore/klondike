@@ -1,12 +1,21 @@
 [workspace]
-members = ["crates/*"]
+members = [
+    "crates/card",
+    "crates/enum-map",
+    "crates/enum-trait",
+    "crates/enum-trait-derive",
+    "crates/klondike",
+    "crates/klondike-cli",
+]
 
 [workspace.package]
 edition = "2021"
 version = "0.0.0"
 
 [workspace.dependencies]
-card = { path = "crates/card" }
-enum-trait = { path = "crates/enum-trait" }
-enum-trait-derive = { path = "crates/enum-trait-derive" }
-klondike = { path = "crates/klondike" }
+card.path = "crates/card"
+enum-map.path = "crates/enum-trait"
+enum-trait.path = "crates/enum-trait"
+enum-trait-derive.path = "crates/enum-trait-derive"
+klondike.path = "crates/klondike"
+klondike-cli.path = "crates/klondike-cli"
