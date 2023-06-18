@@ -21,11 +21,6 @@ pub enum Rank {
 
 pub use Rank::*;
 
-#[rustfmt::skip]
-pub const RANKS: [Rank; 13] = [
-    Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King,
-];
-
 impl Rank {
     pub fn into_char(self) -> char {
         match self {
@@ -61,11 +56,6 @@ pub enum Suit {
 }
 
 pub use Suit::*;
-
-#[rustfmt::skip]
-pub const SUITS: [Suit; 4] = [
-    Club, Diamond, Heart, Spade,
-];
 
 impl Suit {
     pub fn into_char(self) -> char {
@@ -123,9 +113,9 @@ impl Deck {
     pub fn new() -> Deck {
         let mut cards = [MaybeUninit::<Card>::uninit(); 52];
 
-        for (i, rank) in RANKS.into_iter().enumerate() {
-            for (j, suit) in SUITS.into_iter().enumerate() {
-                cards[i * SUITS.len() + j].write(Card::new(rank, suit));
+        for (i, rank) in Rank::variants().enumerate() {
+            for (j, suit) in Suit::variants().enumerate() {
+                cards[i * Suit::LENGTH + j].write(Card::new(rank, suit));
             }
         }
 

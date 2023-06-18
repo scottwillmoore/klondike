@@ -12,7 +12,7 @@ fn test_rank() {
     assert_eq!(Ace as u8, 0);
     assert_eq!(King as u8, 12);
 
-    for (i, rank) in RANKS.into_iter().enumerate() {
+    for (i, rank) in Rank::variants().enumerate() {
         assert_eq!(i, rank as usize);
     }
 }
@@ -22,7 +22,7 @@ fn test_suit() {
     assert_eq!(Club as u8, 0);
     assert_eq!(Spade as u8, 3);
 
-    for (i, suit) in SUITS.into_iter().enumerate() {
+    for (i, suit) in Suit::variants().enumerate() {
         assert_eq!(i, suit as usize);
     }
 }
