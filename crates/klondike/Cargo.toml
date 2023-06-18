@@ -9,5 +9,3 @@ path = "lib.rs"
 
 [dependencies]
 card.workspace = true
-rand = "0.8.5"
-rand_xoshiro = "0.6.0"

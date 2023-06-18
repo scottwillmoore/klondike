@@ -1,6 +1,8 @@
 use std::iter::{Iterator, Map};
 use std::ops::Range;
 
+pub use enum_trait_derive::Enum;
+
 pub trait Enum {
     const LENGTH: usize;
 
@@ -15,7 +17,7 @@ impl Enum for () {
     unsafe fn from_index_unchecked(index: usize) -> Self {
         match index {
             0 => (),
-            _ => unreachable!(),
+            _ => core::hint::unreachable_unchecked(),
         }
     }
 
@@ -31,7 +33,7 @@ impl Enum for bool {
         match index {
             0 => false,
             1 => true,
-            _ => unreachable!(),
+            _ => core::hint::unreachable_unchecked(),
         }
     }
 
@@ -53,7 +55,7 @@ macro_rules! impl_uint {
                 if index <= <$type>::MAX as usize {
                     index as $type
                 } else {
-                    unreachable!()
+                    core::hint::unreachable_unchecked();
                 }
             }
 

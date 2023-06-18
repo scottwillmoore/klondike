@@ -1,4 +1,8 @@
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+use std::mem::MaybeUninit;
+
+use enum_trait::Enum;
+
+#[derive(Clone, Copy, Debug, Enum, Eq, PartialEq)]
 pub enum Rank {
     Ace,
     Two,
@@ -48,7 +52,7 @@ impl std::fmt::Display for Rank {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Enum, Eq, PartialEq)]
 pub enum Suit {
     Club,
     Diamond,
@@ -71,6 +75,10 @@ impl Suit {
             Heart => 'H',
             Spade => 'S',
         }
+    }
+
+    pub fn into_usize(self) -> usize {
+        self as usize
     }
 }
 
@@ -106,16 +114,33 @@ impl std::fmt::Display for Card {
     }
 }
 
-pub fn deck() -> Vec<Card> {
-    let mut cards = Vec::with_capacity(52);
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct Deck {
+    cards: [Card; 52],
+}
 
-    for rank in RANKS {
-        for suit in SUITS {
-            cards.push(Card::new(rank, suit));
+impl Deck {
+    pub fn new() -> Deck {
+        let mut cards = [MaybeUninit::<Card>::uninit(); 52];
+
+        for (i, rank) in RANKS.into_iter().enumerate() {
+            for (j, suit) in SUITS.into_iter().enumerate() {
+                cards[i * SUITS.len() + j].write(Card::new(rank, suit));
+            }
+        }
+
+        Deck {
+            cards: unsafe { std::mem::transmute(cards) },
         }
     }
 
-    cards
+    pub fn cards(&self) -> &[Card] {
+        &self.cards
+    }
+
+    pub fn cards_mut(&mut self) -> &mut [Card] {
+        &mut self.cards
+    }
 }
 
 #[cfg(test)]

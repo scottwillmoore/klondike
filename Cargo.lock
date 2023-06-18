@@ -5,6 +5,9 @@ version = 3
 [[package]]
 name = "card"
 version = "0.0.0"
+dependencies = [
+ "enum-trait",
+]
 
 [[package]]
 name = "cfg-if"
@@ -23,6 +26,7 @@ dependencies = [
 name = "enum-trait"
 version = "0.0.0"
 dependencies = [
+ "enum-trait-derive",
  "paste",
 ]
 
@@ -30,7 +34,9 @@ dependencies = [
 name = "enum-trait-derive"
 version = "0.0.0"
 dependencies = [
- "enum-trait",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -49,15 +55,16 @@ name = "klondike"
 version = "0.0.0"
 dependencies = [
  "card",
- "rand",
- "rand_xoshiro",
 ]
 
 [[package]]
 name = "klondike-cli"
 version = "0.0.0"
 dependencies = [
+ "card",
  "klondike",
+ "rand",
+ "rand_xoshiro",
 ]
 
 [[package]]
@@ -77,6 +84,24 @@ name = "ppv-lite86"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
+
+[[package]]
+name = "proc-macro2"
+version = "1.0.60"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dec2b086b7a862cf4de201096214fa870344cf922b2b30c167badb3af3195406"
+dependencies = [
+ "unicode-ident",
+]
+
+[[package]]
+name = "quote"
+version = "1.0.28"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1b9ab9c7eadfd8df19006f1cf1a4aed13540ed5cbc047010ece5826e10825488"
+dependencies = [
+ "proc-macro2",
+]
 
 [[package]]
 name = "rand"
@@ -116,6 +141,23 @@ checksum = "6f97cdb2a36ed4183de61b2f824cc45c9f1037f28afe0a322e9fff4c108b5aaa"
 dependencies = [
  "rand_core",
 ]
+
+[[package]]
+name = "syn"
+version = "2.0.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32d41677bcbe24c20c52e7c70b0d8db04134c5d1066bf98662e2871ad200ea3e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "unicode-ident",
+]
+
+[[package]]
+name = "unicode-ident"
+version = "1.0.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b15811caf2415fb889178633e7724bad2509101cde276048e013b9def5e51fa0"
 
 [[package]]
 name = "wasi"

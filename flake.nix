@@ -25,6 +25,8 @@
         name = "klondike";
         nativeBuildInputs = [
           packages.fenix.stable.toolchain
+
+          packages.cargo-expand
         ];
       };
     });

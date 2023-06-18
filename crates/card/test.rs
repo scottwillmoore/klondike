@@ -40,6 +40,17 @@ fn test_card() {
 
 #[test]
 fn test_deck() {
-    let deck = deck();
-    assert_eq!(deck.len(), 52)
+    let deck = Deck::new();
+
+    assert_eq!(deck.cards().len(), 52);
+
+    assert_eq!(deck.cards()[0], Card::new(Ace, Club));
+    assert_eq!(deck.cards()[1], Card::new(Ace, Diamond));
+    assert_eq!(deck.cards()[2], Card::new(Ace, Heart));
+    assert_eq!(deck.cards()[3], Card::new(Ace, Spade));
+
+    assert_eq!(deck.cards()[48], Card::new(King, Club));
+    assert_eq!(deck.cards()[49], Card::new(King, Diamond));
+    assert_eq!(deck.cards()[50], Card::new(King, Heart));
+    assert_eq!(deck.cards()[51], Card::new(King, Spade));
 }
