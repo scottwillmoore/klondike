@@ -9,13 +9,28 @@ pub type Variants<T> = Map<Range<usize>, fn(usize) -> T>;
 pub trait Enum {
     const LENGTH: usize;
 
-    fn from_index(index: usize) -> Option<Self>
-    where
-        Self: Sized;
+    // Required methods
 
     unsafe fn from_index_unchecked(index: usize) -> Self;
 
     fn into_index(self) -> usize;
+
+    // Provided methods
+
+    fn is_index(index: usize) -> bool {
+        index < Self::LENGTH
+    }
+
+    fn from_index(index: usize) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if Self::is_index(index) {
+            Some(unsafe { Self::from_index_unchecked(index) })
+        } else {
+            None
+        }
+    }
 
     fn first() -> Self
     where
@@ -42,13 +57,6 @@ pub trait Enum {
 impl Enum for () {
     const LENGTH: usize = 1;
 
-    fn from_index(index: usize) -> Option<Self> {
-        match index {
-            0 => Some(()),
-            _ => None,
-        }
-    }
-
     unsafe fn from_index_unchecked(index: usize) -> Self {
         match index {
             0 => (),
@@ -63,14 +71,6 @@ impl Enum for () {
 
 impl Enum for bool {
     const LENGTH: usize = 2;
-
-    fn from_index(index: usize) -> Option<Self> {
-        match index {
-            0 => Some(false),
-            1 => Some(true),
-            _ => None,
-        }
-    }
 
     unsafe fn from_index_unchecked(index: usize) -> Self {
         match index {
@@ -88,38 +88,30 @@ impl Enum for bool {
     }
 }
 
-// Should this be extended to support signed integers?
-macro_rules! impl_uint {
+macro_rules! impl_int {
     ($type:ty) => {
         impl Enum for $type {
             const LENGTH: usize = 1 << <$type>::BITS;
 
-            fn from_index(index: usize) -> Option<Self> {
-                if index <= <$type>::MAX as usize {
-                    Some(index as $type)
-                } else {
-                    None
-                }
-            }
-
             unsafe fn from_index_unchecked(index: usize) -> Self {
-                if index <= <$type>::MAX as usize {
-                    index as $type
+                if Self::is_index(index) {
+                    (index as $type).wrapping_sub(<$type>::MIN)
                 } else {
                     core::hint::unreachable_unchecked();
                 }
             }
 
             fn into_index(self) -> usize {
-                self as usize
+                self.abs_diff(<$type>::MIN).into()
             }
         }
     };
 }
 
-// Should this be implemented for larger integers?
-impl_uint!(u8);
-impl_uint!(u16);
+impl_int!(i8);
+impl_int!(u8);
+impl_int!(i16);
+impl_int!(u16);
 
 #[cfg(test)]
 mod tests {
@@ -142,13 +134,13 @@ mod tests {
         assert_eq!(iter.next(), None);
     }
 
-    macro_rules! test_uint {
+    macro_rules! test_int {
         ($type:ty) => {
             paste! {
                 #[test]
-                fn [<test_variants_ $type>]() {
-                    let mut iter = u8::variants();
-                    for item in u8::MIN..=u8::MAX {
+                fn [<test_ $type>]() {
+                    let mut iter = <$type>::variants();
+                    for item in <$type>::MIN..=<$type>::MAX {
                         assert_eq!(iter.next(), Some(item));
                     }
                     assert_eq!(iter.next(), None);
@@ -157,6 +149,8 @@ mod tests {
         };
     }
 
-    test_uint!(u8);
-    test_uint!(u16);
+    test_int!(i8);
+    test_int!(u8);
+    test_int!(i16);
+    test_int!(u16);
 }
