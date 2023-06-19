@@ -1,12 +1,12 @@
 use std::io::{stdin, stdout, Result, Write};
 
-use card::Deck;
+use card::{Card, Deck};
 use klondike::Game;
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
 use rand_xoshiro::Xoshiro256PlusPlus;
 
-fn print(game: &Game) {
+fn show(game: &Game) {
     println!(
         "{}\n",
         game.foundation()
@@ -64,13 +64,22 @@ pub fn main() -> Result<()> {
         stdin().read_line(&mut line)?;
         println!();
 
-        match line.to_lowercase().trim() {
+        let line = line.trim();
+        match line.to_lowercase().as_str() {
             "q" | "quit" => {
                 break;
             }
-            _ => {
-                print(&game);
+            "s" | "show" => {
+                show(&game);
             }
+            _ => match line.parse::<Card>() {
+                Ok(card) => println!(
+                    "Card: {} of {}s",
+                    card.rank().to_str(),
+                    card.suit().to_str()
+                ),
+                Err(error) => println!("Error: {}", error),
+            },
         }
     }
 

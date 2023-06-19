@@ -22,7 +22,26 @@ pub enum Rank {
 pub use Rank::*;
 
 impl Rank {
-    pub fn into_char(self) -> char {
+    pub fn from_char(char: char) -> Option<Self> {
+        match char {
+            'A' => Some(Ace),
+            '2' => Some(Two),
+            '3' => Some(Three),
+            '4' => Some(Four),
+            '5' => Some(Five),
+            '6' => Some(Six),
+            '7' => Some(Seven),
+            '8' => Some(Eight),
+            '9' => Some(Nine),
+            'T' => Some(Ten),
+            'J' => Some(Jack),
+            'Q' => Some(Queen),
+            'K' => Some(King),
+            _ => None,
+        }
+    }
+
+    pub fn to_char(self) -> char {
         match self {
             Ace => 'A',
             Two => '2',
@@ -39,11 +58,69 @@ impl Rank {
             King => 'K',
         }
     }
+
+    pub fn to_str(self) -> &'static str {
+        match self {
+            Ace => "Ace",
+            Two => "Two",
+            Three => "Three",
+            Four => "Four",
+            Five => "Five",
+            Six => "Six",
+            Seven => "Seven",
+            Eight => "Eight",
+            Nine => "Nine",
+            Ten => "Ten",
+            Jack => "Jack",
+            Queen => "Queen",
+            King => "King",
+        }
+    }
 }
 
 impl std::fmt::Display for Rank {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "{}", self.into_char())
+        write!(formatter, "{}", self.to_char())
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ParseError {
+    TooShort,
+    Invalid,
+    TooLong,
+}
+
+fn parse_char(str: &str) -> Result<char, ParseError> {
+    let mut chars = str.chars();
+    match (chars.next(), chars.next()) {
+        (None, _) => Err(ParseError::TooShort),
+        (Some(char), None) => Ok(char),
+        _ => Err(ParseError::TooLong),
+    }
+}
+
+impl std::error::Error for ParseError {}
+
+impl std::fmt::Display for ParseError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            formatter,
+            "{}",
+            match self {
+                ParseError::TooShort => "too few characters",
+                ParseError::Invalid => "invalid characters",
+                ParseError::TooLong => "too many characters",
+            }
+        )
+    }
+}
+
+impl std::str::FromStr for Rank {
+    type Err = ParseError;
+
+    fn from_str(str: &str) -> Result<Self, Self::Err> {
+        parse_char(str).and_then(|char| Rank::from_char(char).ok_or(ParseError::Invalid))
     }
 }
 
@@ -58,7 +135,16 @@ pub enum Suit {
 pub use Suit::*;
 
 impl Suit {
-    pub fn into_char(self) -> char {
+    pub fn from_char(char: char) -> Option<Self> {
+        match char {
+            'C' => Some(Club),
+            'D' => Some(Diamond),
+            'H' => Some(Heart),
+            'S' => Some(Spade),
+            _ => None,
+        }
+    }
+    pub fn to_char(self) -> char {
         match self {
             Club => 'C',
             Diamond => 'D',
@@ -67,14 +153,27 @@ impl Suit {
         }
     }
 
-    pub fn into_usize(self) -> usize {
-        self as usize
+    pub fn to_str(self) -> &'static str {
+        match self {
+            Club => "Club",
+            Diamond => "Diamond",
+            Heart => "Heart",
+            Spade => "Spade",
+        }
     }
 }
 
 impl std::fmt::Display for Suit {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "{}", self.into_char())
+        write!(formatter, "{}", self.to_char())
+    }
+}
+
+impl std::str::FromStr for Suit {
+    type Err = ParseError;
+
+    fn from_str(str: &str) -> Result<Self, Self::Err> {
+        parse_char(str).and_then(|char| Suit::from_char(char).ok_or(ParseError::Invalid))
     }
 }
 
@@ -98,9 +197,32 @@ impl Card {
     }
 }
 
+impl std::convert::From<(Rank, Suit)> for Card {
+    fn from(from: (Rank, Suit)) -> Self {
+        Card::new(from.0, from.1)
+    }
+}
+
 impl std::fmt::Display for Card {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(formatter, "{}{}", self.rank, self.suit)
+    }
+}
+
+impl std::str::FromStr for Card {
+    type Err = ParseError;
+
+    fn from_str(str: &str) -> Result<Self, Self::Err> {
+        let mut chars = str.chars();
+        match (chars.next(), chars.next(), chars.next()) {
+            (None, _, _) => Err(ParseError::TooShort),
+            (Some(rank_char), Some(suit_char), None) => {
+                let rank = Rank::from_char(rank_char);
+                let suit = Suit::from_char(suit_char);
+                rank.zip(suit).map(Into::into).ok_or(ParseError::Invalid)
+            }
+            _ => Err(ParseError::TooLong),
+        }
     }
 }
 
@@ -130,6 +252,20 @@ impl Deck {
 
     pub fn cards_mut(&mut self) -> &mut [Card] {
         &mut self.cards
+    }
+}
+
+impl std::fmt::Display for Deck {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            formatter,
+            "{}",
+            self.cards
+                .iter()
+                .map(|card| format!("{}", card))
+                .collect::<Vec<String>>()
+                .join(" ")
+        )
     }
 }
 
