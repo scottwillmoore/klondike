@@ -6,10 +6,43 @@ use rand::seq::SliceRandom;
 use rand::SeedableRng;
 use rand_xoshiro::Xoshiro256PlusPlus;
 
-fn print_game(game: &Game) {
-    println!("{:?}", game.foundation().piles());
-    println!("{:?}", game.stock().cards());
-    println!("{:?}", game.tableau().piles());
+fn print(game: &Game) {
+    println!(
+        "{}\n",
+        game.foundation()
+            .cards()
+            .map(|option| option.map_or("()".to_string(), |card| format!("({})", card)))
+            .collect::<Vec<String>>()
+            .join(" ")
+    );
+
+    println!(
+        "{}{}\n",
+        game.stock()
+            .bottom_cards()
+            .map(|card| format!("{} ", card))
+            .collect::<Vec<String>>()
+            .join(""),
+        game.stock()
+            .top_card()
+            .map_or("()".to_string(), |card| format!("({})", card))
+    );
+
+    for pile in game.tableau().piles() {
+        println!(
+            "{}({})",
+            pile.face_down_cards()
+                .iter()
+                .map(|card| format!("{} ", card))
+                .collect::<Vec<String>>()
+                .join(""),
+            pile.face_up_cards()
+                .iter()
+                .map(|card| format!("{}", card))
+                .collect::<Vec<String>>()
+                .join(" ")
+        );
+    }
 }
 
 pub fn main() -> Result<()> {
@@ -19,7 +52,7 @@ pub fn main() -> Result<()> {
     let mut deck = Deck::new();
     deck.cards_mut().shuffle(&mut random);
 
-    let mut game = Game::new(deck);
+    let game = Game::new(deck);
 
     let mut line = String::new();
 
@@ -36,7 +69,7 @@ pub fn main() -> Result<()> {
                 break;
             }
             _ => {
-                print_game(&game);
+                print(&game);
             }
         }
     }

@@ -1,15 +1,20 @@
 use std::collections::VecDeque;
 
 use card::*;
+use enum_trait::Enum;
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Default, Eq, PartialEq)]
 pub struct FoundationPile {
     top_rank: Option<Rank>,
 }
 
 impl FoundationPile {
-    pub fn top_rank(&self) -> Option<Rank> {
-        self.top_rank
+    // pub fn top_rank(&self) -> &Option<Rank> {
+    //     &self.top_rank
+    // }
+
+    pub fn top_card(&self, suit: Suit) -> Option<Card> {
+        self.top_rank.map(|rank| Card::new(rank, suit))
     }
 }
 
@@ -17,7 +22,7 @@ const FOUNDATION_PILE_COUNT: usize = 4;
 
 type FoundationPiles = [FoundationPile; FOUNDATION_PILE_COUNT];
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Default, Eq, PartialEq)]
 pub struct Foundation {
     piles: FoundationPiles,
 }
@@ -27,15 +32,15 @@ impl Foundation {
         &self.piles
     }
 
-    // pub fn iter(&self) -> impl Iterator<Item = Option<Card>> {
-    //     self.piles
-    //         .iter()
-    //         .enumerate()
-    //         .map(|(i, pile)| pile.top_rank().map(|rank| Card::new(rank, i as Suit)))
-    // }
+    pub fn cards(&self) -> impl Iterator<Item = Option<Card>> {
+        self.piles
+            .into_iter()
+            .enumerate()
+            .map(|(i, pile)| pile.top_card(Suit::from_index(i).unwrap()))
+    }
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Stock {
     cards: VecDeque<Card>,
 }
@@ -49,8 +54,12 @@ impl Stock {
         }
     }
 
-    pub fn cards(&self) -> (&[Card], &[Card]) {
-        self.cards.as_slices()
+    pub fn cards(&self) -> impl Iterator<Item = &Card> {
+        self.cards.iter().rev()
+    }
+
+    pub fn bottom_cards(&self) -> impl Iterator<Item = &Card> {
+        self.cards.iter().skip(1).rev()
     }
 
     pub fn top_card(&self) -> Option<&Card> {
@@ -70,6 +79,10 @@ impl TableauPile {
             cards: cards.iter().copied().collect(),
             face_up_bottom_index: cards.len() - 1,
         }
+    }
+
+    pub fn cards(&self) -> &[Card] {
+        &self.cards
     }
 
     pub fn face_down_cards(&self) -> &[Card] {

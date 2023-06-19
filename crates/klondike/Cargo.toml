@@ -9,3 +9,4 @@ path = "lib.rs"
 
 [dependencies]
 card.workspace = true
+enum-trait.workspace = true
