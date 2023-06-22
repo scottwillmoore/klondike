@@ -3,18 +3,14 @@ use std::collections::VecDeque;
 use card::*;
 use enum_trait::Enum;
 
-#[derive(Copy, Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct FoundationPile {
     top_rank: Option<Rank>,
 }
 
 impl FoundationPile {
-    // pub fn top_rank(&self) -> &Option<Rank> {
-    //     &self.top_rank
-    // }
-
-    pub fn top_card(&self, suit: Suit) -> Option<Card> {
-        self.top_rank.map(|rank| Card::new(rank, suit))
+    pub fn top_rank(&self) -> Option<Rank> {
+        self.top_rank
     }
 }
 
@@ -22,7 +18,7 @@ const FOUNDATION_PILE_COUNT: usize = 4;
 
 type FoundationPiles = [FoundationPile; FOUNDATION_PILE_COUNT];
 
-#[derive(Copy, Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Foundation {
     piles: FoundationPiles,
 }
@@ -32,11 +28,25 @@ impl Foundation {
         &self.piles
     }
 
-    pub fn cards(&self) -> impl Iterator<Item = Option<Card>> {
+    pub fn enumerate_piles(&self) -> impl DoubleEndedIterator<Item = (Suit, &FoundationPile)> {
         self.piles
-            .into_iter()
+            .iter()
             .enumerate()
-            .map(|(i, pile)| pile.top_card(Suit::from_index(i).unwrap()))
+            .map(|(i, pile)| (Suit::from_index(i).unwrap(), pile))
+    }
+}
+
+impl std::ops::Index<Suit> for Foundation {
+    type Output = FoundationPile;
+
+    fn index(&self, index: Suit) -> &Self::Output {
+        &self.piles[index.into_index()]
+    }
+}
+
+impl std::ops::IndexMut<Suit> for Foundation {
+    fn index_mut(&mut self, index: Suit) -> &mut Self::Output {
+        &mut self.piles[index.into_index()]
     }
 }
 
@@ -54,43 +64,43 @@ impl Stock {
         }
     }
 
-    pub fn cards(&self) -> impl Iterator<Item = &Card> {
-        self.cards.iter().rev()
+    pub fn cards(&self) -> impl DoubleEndedIterator<Item = Card> + '_ {
+        self.cards.iter().copied()
     }
 
-    pub fn bottom_cards(&self) -> impl Iterator<Item = &Card> {
-        self.cards.iter().skip(1).rev()
+    pub fn bottom_cards(&self) -> impl DoubleEndedIterator<Item = Card> + '_ {
+        self.cards.iter().skip(1).copied()
     }
 
-    pub fn top_card(&self) -> Option<&Card> {
-        self.cards.front()
+    pub fn top_card(&self) -> Option<Card> {
+        self.cards.front().copied()
     }
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct TableauPile {
     cards: Vec<Card>,
-    face_up_bottom_index: usize,
+    top_bottom_index: usize,
 }
 
 impl TableauPile {
     fn new(cards: &[Card]) -> TableauPile {
         TableauPile {
             cards: cards.iter().copied().collect(),
-            face_up_bottom_index: cards.len() - 1,
+            top_bottom_index: cards.len() - 1,
         }
     }
 
-    pub fn cards(&self) -> &[Card] {
-        &self.cards
+    pub fn cards(&self) -> impl DoubleEndedIterator<Item = Card> + '_ {
+        self.cards.iter().rev().copied()
     }
 
-    pub fn face_down_cards(&self) -> &[Card] {
-        &self.cards[..self.face_up_bottom_index]
+    pub fn bottom_cards(&self) -> impl DoubleEndedIterator<Item = Card> + '_ {
+        self.cards[..self.top_bottom_index].iter().rev().copied()
     }
 
-    pub fn face_up_cards(&self) -> &[Card] {
-        &self.cards[self.face_up_bottom_index..]
+    pub fn top_cards(&self) -> impl DoubleEndedIterator<Item = Card> + '_ {
+        self.cards[self.top_bottom_index..].iter().rev().copied()
     }
 }
 
@@ -131,6 +141,40 @@ impl Tableau {
     pub fn piles(&self) -> &TableauPiles {
         &self.piles
     }
+
+    pub fn enumerate_piles(&self) -> impl DoubleEndedIterator<Item = (usize, &TableauPile)> {
+        self.piles.iter().enumerate()
+    }
+}
+
+impl std::ops::Index<usize> for Tableau {
+    type Output = TableauPile;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.piles[index]
+    }
+}
+
+impl std::ops::IndexMut<usize> for Tableau {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        &mut self.piles[index]
+    }
+}
+
+// #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+// pub enum Transition {
+//     TableauToTableau {
+//         from: usize,
+//         amount: usize,
+//         to: usize,
+//     },
+// }
+
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum Position {
+    Stock,
+    Tableau { index: usize, depth: usize },
+    Foundation,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -161,4 +205,44 @@ impl Game {
     pub fn tableau(&self) -> &Tableau {
         &self.tableau
     }
+
+    pub fn find_card(&self, card: Card) -> Option<Position> {
+        if self.foundation[card.suit()]
+            .top_rank()
+            .is_some_and(|pile_rank| pile_rank == card.rank())
+        {
+            return Some(Position::Foundation);
+        }
+
+        if self
+            .stock
+            .top_card()
+            .is_some_and(|stock_card| stock_card == card)
+        {
+            return Some(Position::Stock);
+        }
+
+        for (index, pile) in self.tableau.piles().iter().enumerate() {
+            for (depth, pile_card) in pile.top_cards().enumerate() {
+                if pile_card == card {
+                    return Some(Position::Tableau { index, depth });
+                }
+            }
+        }
+
+        None
+    }
+
+    // pub fn tableau_to_tableau(&mut self, from: usize, amount: usize, to: usize) -> Option<()> {
+    //     let from = &mut self.tableau.piles[from];
+
+    //     let new_length = from.cards.len().checked_sub(amount)?;
+    //     // Can I copy the cards without an intermediate allocation?
+    //     let cards = from.cards.drain(new_length..).collect::<Vec<Card>>();
+
+    //     let to = &mut self.tableau.piles[to];
+    //     to.cards.extend(cards);
+
+    //     Some(())
+    // }
 }

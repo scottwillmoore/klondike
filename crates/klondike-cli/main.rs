@@ -1,16 +1,19 @@
 use std::io::{stdin, stdout, Result, Write};
 
-use card::{Card, Deck};
+use card::*;
 use klondike::Game;
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
 use rand_xoshiro::Xoshiro256PlusPlus;
 
+fn help() {}
+
 fn show(game: &Game) {
     println!(
         "{}\n",
         game.foundation()
-            .cards()
+            .enumerate_piles()
+            .map(|(suit, pile)| pile.top_rank().map(|rank| Card::new(rank, suit)))
             .map(|option| option.map_or("()".to_string(), |card| format!("({})", card)))
             .collect::<Vec<String>>()
             .join(" ")
@@ -20,6 +23,7 @@ fn show(game: &Game) {
         "{}{}\n",
         game.stock()
             .bottom_cards()
+            .rev()
             .map(|card| format!("{} ", card))
             .collect::<Vec<String>>()
             .join(""),
@@ -31,13 +35,13 @@ fn show(game: &Game) {
     for pile in game.tableau().piles() {
         println!(
             "{}({})",
-            pile.face_down_cards()
-                .iter()
+            pile.bottom_cards()
+                .rev()
                 .map(|card| format!("{} ", card))
                 .collect::<Vec<String>>()
                 .join(""),
-            pile.face_up_cards()
-                .iter()
+            pile.top_cards()
+                .rev()
                 .map(|card| format!("{}", card))
                 .collect::<Vec<String>>()
                 .join(" ")
@@ -66,20 +70,19 @@ pub fn main() -> Result<()> {
 
         let line = line.trim();
         match line.to_lowercase().as_str() {
-            "q" | "quit" => {
-                break;
+            "h" | "help" => help(),
+            "q" | "quit" => break,
+            "s" | "show" => show(&game),
+            _ => {
+                match line.parse::<Card>() {
+                    Ok(card) => {
+                        println!("{} of {}s", card.rank().to_str(), card.suit().to_str());
+
+                        println!("{:?}", game.find_card(card));
+                    }
+                    Err(error) => println!("Error: {}", error),
+                };
             }
-            "s" | "show" => {
-                show(&game);
-            }
-            _ => match line.parse::<Card>() {
-                Ok(card) => println!(
-                    "Card: {} of {}s",
-                    card.rank().to_str(),
-                    card.suit().to_str()
-                ),
-                Err(error) => println!("Error: {}", error),
-            },
         }
     }
 

@@ -1,12 +1,5 @@
 [workspace]
-members = [
-    "crates/card",
-    "crates/enum-map",
-    "crates/enum-trait",
-    "crates/enum-trait-derive",
-    "crates/klondike",
-    "crates/klondike-cli",
-]
+members = ["crates/*"]
 
 [workspace.package]
 edition = "2021"
