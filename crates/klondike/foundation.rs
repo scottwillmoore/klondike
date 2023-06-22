@@ -38,12 +38,12 @@ impl std::ops::Index<Suit> for Foundation {
     type Output = FoundationPile;
 
     fn index(&self, index: Suit) -> &Self::Output {
-        &self.piles[index.into_index()]
+        &self.piles[index.to_index()]
     }
 }
 
 impl std::ops::IndexMut<Suit> for Foundation {
     fn index_mut(&mut self, index: Suit) -> &mut Self::Output {
-        &mut self.piles[index.into_index()]
+        &mut self.piles[index.to_index()]
     }
 }

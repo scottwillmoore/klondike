@@ -1,14 +1,14 @@
 mod rank;
-pub use rank::*;
+pub use crate::rank::*;
 
 mod suit;
-pub use suit::*;
+pub use crate::suit::*;
 
 mod card;
-pub use card::*;
+pub use crate::card::*;
 
 mod deck;
-pub use deck::*;
+pub use crate::deck::*;
 
 #[cfg(test)]
 mod test;

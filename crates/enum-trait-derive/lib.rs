@@ -11,7 +11,7 @@ pub fn derive_enum(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
 
             let mut length: usize = 0;
 
-            let mut from_unchecked_match_arms = quote! {};
+            let mut from_match_arms = quote! {};
             let mut into_match_arms = quote! {};
 
             for variant in data_enum.variants {
@@ -19,9 +19,9 @@ pub fn derive_enum(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
                     Fields::Unit => {
                         let variant = variant.ident;
 
-                        from_unchecked_match_arms = quote! {
-                            #from_unchecked_match_arms
-                            #length => Self::#variant,
+                        from_match_arms = quote! {
+                            #from_match_arms
+                            #length => ::core::option::Option::Some(Self::#variant),
                         };
 
                         into_match_arms = quote! {
@@ -41,14 +41,14 @@ pub fn derive_enum(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
                     impl ::enum_trait::Enum for #name {
                         const LENGTH: ::core::primitive::usize = #length;
 
-                        unsafe fn from_index_unchecked(index: ::core::primitive::usize) -> Self {
+                        fn from_index(index: ::core::primitive::usize) -> Option<Self> {
                             match index {
-                                #from_unchecked_match_arms
-                                _ => ::core::hint::unreachable_unchecked(),
+                                #from_match_arms
+                                _ => ::core::option::Option::None,
                             }
                         }
 
-                        fn into_index(self) -> ::core::primitive::usize {
+                        fn to_index(self) -> ::core::primitive::usize {
                             match self {
                                 #into_match_arms
                             }

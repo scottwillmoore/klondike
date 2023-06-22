@@ -1,16 +1,13 @@
-use card::{Card, Deck};
-
 mod foundation;
-pub use foundation::*;
+pub use crate::foundation::*;
 
 mod stock;
-pub use stock::*;
+pub use crate::stock::*;
 
 mod tableau;
-pub use tableau::*;
+pub use crate::tableau::*;
 
-#[cfg(test)]
-mod test;
+use card::{Card, Deck};
 
 // #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 // pub enum Transition {

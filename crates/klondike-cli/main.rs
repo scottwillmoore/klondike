@@ -77,7 +77,6 @@ pub fn main() -> Result<()> {
                 match line.parse::<Card>() {
                     Ok(card) => {
                         println!("{} of {}s", card.rank().to_str(), card.suit().to_str());
-
                         println!("{:?}", game.find_card(card));
                     }
                     Err(error) => println!("Error: {}", error),
