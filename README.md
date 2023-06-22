@@ -2,26 +2,6 @@
 
 > The best information about the winnability of Klondike concerns a modified version of the game called "Thoughtful Solitaire" or "Thoughtful Klondike", in which the location of all 52 cards is known.
 
-## Tasks
-
-- [x] Create card
-- [x] Create deck
-- [x] Shuffle deck
-- [x] Use a seedable random number generator
-- [x] Create game state
-- [ ] CLI
-- [ ] TUI
-- [ ] GUI (Web-based)
-
-## Rules
-
-- Foundation
-- Pile
-- Stock
-- Tableau
-- Talon
-- Waste
-
 ## Notations
 
 With chess, there is a [standard notation](<https://en.wikipedia.org/wiki/Algebraic_notation_(chess)>) also known as algebraic notation which is used to record the moves in a game of chess. There does not appear to be a standard notation for Klondike.
@@ -61,3 +41,15 @@ A binary format? Provide a derived description of the move, which includes all i
 - https://docs.rs/rand_xoshiro/latest/rand_xoshiro/
 - https://prng.di.unimi.it/
 - https://rust-random.github.io/book/guide-rngs.html
+
+### Procedural Macros
+
+- https://doc.rust-lang.org/reference/procedural-macros.html
+- https://developerlife.com/2022/03/30/rust-proc-macro/#what-are-procedural-macros
+- https://blog.jetbrains.com/rust/2022/03/18/procedural-macros-under-the-hood-part-i/
+- https://blog.jetbrains.com/rust/2022/07/07/procedural-macros-under-the-hood-part-ii/
+- https://gist.github.com/Kestrer/8c05ebd4e0e9347eb05f265dfb7252e1
+- https://github.com/dtolnay/proc-macro2
+- https://github.com/dtolnay/quote
+- https://github.com/dtolnay/syn
+- https://github.com/xfix/enum-map/tree/master/enum-map-derive

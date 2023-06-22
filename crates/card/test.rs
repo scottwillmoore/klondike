@@ -1,3 +1,5 @@
+use enum_trait::Enum;
+
 use crate::*;
 
 #[test]
