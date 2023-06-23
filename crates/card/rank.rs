@@ -1,6 +1,8 @@
 use enum_trait::Enum;
 
-#[derive(Clone, Copy, Debug, Enum, Eq, PartialEq)]
+use crate::*;
+
+#[derive(Clone, Copy, Debug, Enum, Eq, Ord, PartialEq, PartialOrd)]
 pub enum Rank {
     Ace,
     Two,
@@ -74,10 +76,42 @@ impl Rank {
             King => "King",
         }
     }
+
+    pub fn with_suit(self, suit: Suit) -> Card {
+        Card::new(self, suit)
+    }
+}
+
+impl std::convert::TryFrom<char> for Rank {
+    type Error = ParseError;
+
+    fn try_from(char: char) -> Result<Self, Self::Error> {
+        Self::from_char(char).ok_or(ParseError::Invalid)
+    }
+}
+
+impl std::convert::From<Rank> for char {
+    fn from(rank: Rank) -> Self {
+        rank.to_char()
+    }
+}
+
+impl std::convert::From<Rank> for &'static str {
+    fn from(rank: Rank) -> Self {
+        rank.to_str()
+    }
 }
 
 impl std::fmt::Display for Rank {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(formatter, "{}", self.to_char())
+    }
+}
+
+impl std::str::FromStr for Rank {
+    type Err = ParseError;
+
+    fn from_str(str: &str) -> Result<Self, Self::Err> {
+        parse_char(str).and_then(Rank::try_from)
     }
 }
