@@ -21,6 +21,34 @@ pub trait Enum {
 
     // Provided methods
 
+    fn first() -> Option<Self>
+    where
+        Self: Sized,
+    {
+        Self::from_index(0)
+    }
+
+    fn last() -> Option<Self>
+    where
+        Self: Sized,
+    {
+        Self::from_index(Self::LENGTH - 1)
+    }
+
+    fn previous(self) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        self.to_index().checked_sub(1).and_then(Self::from_index)
+    }
+
+    fn next(self) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        self.to_index().checked_add(1).and_then(Self::from_index)
+    }
+
     fn variants() -> Variants<Self>
     where
         Self: Sized,
@@ -85,5 +113,6 @@ macro_rules! impl_int {
 
 impl_int!(i8);
 impl_int!(u8);
+
 impl_int!(i16);
 impl_int!(u16);
