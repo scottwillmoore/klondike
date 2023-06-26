@@ -11,11 +11,10 @@ pub enum Color {
 pub use Color::*;
 
 impl Color {
-    pub fn from_char(char: char) -> Option<Self> {
-        match char {
-            'B' => Some(Black),
-            'R' => Some(Red),
-            _ => None,
+    pub fn opposite(self) -> Color {
+        match self {
+            Black => Red,
+            Red => Black,
         }
     }
 
@@ -32,23 +31,11 @@ impl Color {
             Red => "Red",
         }
     }
-
-    pub fn opposite(self) -> Color {
-        match self {
-            Black => Red,
-            Red => Black,
-        }
-    }
 }
 
 impl std::convert::From<Suit> for Color {
     fn from(suit: Suit) -> Self {
-        match suit {
-            Club => Black,
-            Diamond => Red,
-            Heart => Red,
-            Spade => Black,
-        }
+        suit.to_color()
     }
 }
 
@@ -62,7 +49,11 @@ impl std::convert::TryFrom<char> for Color {
     type Error = ParseError;
 
     fn try_from(char: char) -> Result<Self, Self::Error> {
-        Self::from_char(char).ok_or(ParseError::Invalid)
+        match char {
+            'B' => Ok(Black),
+            'R' => Ok(Red),
+            _ => Err(ParseError::Invalid),
+        }
     }
 }
 
@@ -80,7 +71,7 @@ impl std::convert::From<Color> for &'static str {
 
 impl std::fmt::Display for Color {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "{}", self.to_char())
+        write!(formatter, "{}", self.to_str())
     }
 }
 

@@ -1,20 +1,36 @@
-use std::io::{stdin, stdout, Result, Write};
+use std::io::{stdin, stdout, Write};
 
+use anyhow::Result;
 use card::*;
 use klondike::Game;
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
 use rand_xoshiro::Xoshiro256PlusPlus;
 
-fn help() {}
+fn read_line(prompt: &str, line: &mut String) -> Result<()> {
+    println!();
 
-fn show(game: &Game) {
+    print!("{}", prompt);
+    stdout().flush()?;
+
+    line.clear();
+    stdin().read_line(line)?;
+
+    println!();
+
+    Ok(())
+}
+
+fn print_game(game: &Game) {
+    let to_mark = |card: Card| card.to_ascii_mark();
+    // let to_mark = |card: Card| card.to_mark();
+
     println!(
         "{}\n",
         game.foundation()
             .enumerate_piles()
             .map(|(suit, pile)| pile.top_rank().map(|rank| Card::new(rank, suit)))
-            .map(|option| option.map_or("()".to_string(), |card| format!("({})", card)))
+            .map(|option| option.map_or("()".to_string(), |card| format!("({})", to_mark(card))))
             .collect::<Vec<String>>()
             .join(" ")
     );
@@ -24,25 +40,31 @@ fn show(game: &Game) {
         game.stock()
             .bottom_cards()
             .rev()
-            .map(|card| format!("{} ", card))
+            .map(|card| format!("{} ", to_mark(card)))
             .collect::<Vec<String>>()
             .join(""),
         game.stock()
             .top_card()
-            .map_or("()".to_string(), |card| format!("({})", card))
+            .map_or("()".to_string(), |card| format!("({})", to_mark(card)))
     );
 
-    for pile in game.tableau().piles() {
+    for (index, pile) in game.tableau().enumerate_piles() {
         println!(
-            "{}({})",
+            "{}: {}({})",
+            TryInto::<char>::try_into(
+                TryInto::<u32>::try_into(index)
+                    .map(|index| Into::<u32>::into('a') + index)
+                    .unwrap()
+            )
+            .unwrap(),
             pile.bottom_cards()
                 .rev()
-                .map(|card| format!("{} ", card))
+                .map(|card| format!("{} ", to_mark(card)))
                 .collect::<Vec<String>>()
                 .join(""),
             pile.top_cards()
                 .rev()
-                .map(|card| format!("{}", card))
+                .map(|card| to_mark(card))
                 .collect::<Vec<String>>()
                 .join(" ")
         );
@@ -50,31 +72,26 @@ fn show(game: &Game) {
 }
 
 pub fn main() -> Result<()> {
-    let seed = 0;
-    let mut random = Xoshiro256PlusPlus::seed_from_u64(seed);
-
-    let mut deck = Deck::new();
-    deck.cards_mut().shuffle(&mut random);
-
-    let game = Game::new(deck);
-
     let mut line = String::new();
 
-    loop {
-        println!();
-        print!("> ");
-        stdout().flush()?;
-        line.clear();
-        stdin().read_line(&mut line)?;
-        println!();
+    read_line("seed = ", &mut line)?;
+    let seed = line.trim().parse::<u64>()?;
+    let mut generator = Xoshiro256PlusPlus::seed_from_u64(seed);
 
-        let line = line.trim();
-        match line.to_lowercase().as_str() {
-            "h" | "help" => help(),
+    let mut deck = Deck::new();
+    deck.cards_mut().shuffle(&mut generator);
+
+    let game = Game::new(deck);
+    print_game(&game);
+
+    loop {
+        read_line("> ", &mut line)?;
+
+        match line.trim().to_lowercase().as_str() {
             "q" | "quit" => break,
-            "s" | "show" => show(&game),
+            "s" | "show" => print_game(&game),
             _ => {
-                match line.parse::<Card>() {
+                match line.trim().parse::<Card>() {
                     Ok(card) => {
                         println!("{} of {}s", card.rank().to_str(), card.suit().to_str());
                         println!("{:?}", game.find_card(card));

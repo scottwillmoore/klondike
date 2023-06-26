@@ -18,6 +18,27 @@ impl Card {
     pub fn suit(self) -> Suit {
         self.suit
     }
+
+    // https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
+    pub fn to_char(self) -> char {
+        todo!()
+    }
+
+    pub fn to_color(self) -> Color {
+        self.suit.into()
+    }
+
+    pub fn to_ascii_mark(self) -> String {
+        format!("{}{}", self.rank.to_char(), self.suit.to_ascii_char())
+    }
+
+    pub fn to_mark(self) -> String {
+        format!("{}{}", self.rank.to_char(), self.suit.to_char())
+    }
+
+    pub fn to_name(self) -> String {
+        format!("{} of {}s", self.rank, self.suit)
+    }
 }
 
 impl std::convert::From<(Rank, Suit)> for Card {
@@ -32,9 +53,15 @@ impl std::convert::From<(Suit, Rank)> for Card {
     }
 }
 
+impl std::convert::From<Card> for char {
+    fn from(card: Card) -> Self {
+        card.to_char()
+    }
+}
+
 impl std::fmt::Display for Card {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "{}{}", self.rank, self.suit)
+        write!(formatter, "{}", self.to_name())
     }
 }
 

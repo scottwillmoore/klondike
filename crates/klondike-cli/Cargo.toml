@@ -9,6 +9,7 @@ name = "klondike-cli"
 path = "main.rs"
 
 [dependencies]
+anyhow = "1.0.71"
 card.workspace = true
 klondike.workspace = true
 rand = "0.8.5"

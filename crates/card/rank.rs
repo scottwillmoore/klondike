@@ -22,25 +22,6 @@ pub enum Rank {
 pub use Rank::*;
 
 impl Rank {
-    pub fn from_char(char: char) -> Option<Self> {
-        match char {
-            'A' => Some(Ace),
-            '2' => Some(Two),
-            '3' => Some(Three),
-            '4' => Some(Four),
-            '5' => Some(Five),
-            '6' => Some(Six),
-            '7' => Some(Seven),
-            '8' => Some(Eight),
-            '9' => Some(Nine),
-            'T' => Some(Ten),
-            'J' => Some(Jack),
-            'Q' => Some(Queen),
-            'K' => Some(King),
-            _ => None,
-        }
-    }
-
     pub fn to_char(self) -> char {
         match self {
             Ace => 'A',
@@ -82,11 +63,32 @@ impl Rank {
     }
 }
 
+impl std::convert::From<Card> for Rank {
+    fn from(card: Card) -> Self {
+        card.rank()
+    }
+}
+
 impl std::convert::TryFrom<char> for Rank {
     type Error = ParseError;
 
     fn try_from(char: char) -> Result<Self, Self::Error> {
-        Self::from_char(char).ok_or(ParseError::Invalid)
+        match char {
+            'A' => Ok(Ace),
+            '2' => Ok(Two),
+            '3' => Ok(Three),
+            '4' => Ok(Four),
+            '5' => Ok(Five),
+            '6' => Ok(Six),
+            '7' => Ok(Seven),
+            '8' => Ok(Eight),
+            '9' => Ok(Nine),
+            'T' => Ok(Ten),
+            'J' => Ok(Jack),
+            'Q' => Ok(Queen),
+            'K' => Ok(King),
+            _ => Err(ParseError::Invalid),
+        }
     }
 }
 
@@ -104,7 +106,7 @@ impl std::convert::From<Rank> for &'static str {
 
 impl std::fmt::Display for Rank {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "{}", self.to_char())
+        write!(formatter, "{}", self.to_str())
     }
 }
 

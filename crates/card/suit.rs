@@ -13,22 +13,30 @@ pub enum Suit {
 pub use Suit::*;
 
 impl Suit {
-    pub fn from_char(char: char) -> Option<Self> {
-        match char {
-            'C' => Some(Club),
-            'D' => Some(Diamond),
-            'H' => Some(Heart),
-            'S' => Some(Spade),
-            _ => None,
-        }
-    }
-
-    pub fn to_char(self) -> char {
+    pub fn to_ascii_char(self) -> char {
         match self {
             Club => 'C',
             Diamond => 'D',
             Heart => 'H',
             Spade => 'S',
+        }
+    }
+
+    pub fn to_char(self) -> char {
+        match self {
+            Club => '♣',
+            Diamond => '♦',
+            Heart => '♥',
+            Spade => '♠',
+        }
+    }
+
+    pub fn to_color(self) -> Color {
+        match self {
+            Club => Black,
+            Diamond => Red,
+            Heart => Red,
+            Spade => Black,
         }
     }
 
@@ -46,17 +54,29 @@ impl Suit {
     }
 }
 
+impl std::convert::From<Card> for Suit {
+    fn from(card: Card) -> Self {
+        card.suit()
+    }
+}
+
 impl std::convert::TryFrom<char> for Suit {
     type Error = ParseError;
 
     fn try_from(char: char) -> Result<Self, Self::Error> {
-        Self::from_char(char).ok_or(ParseError::Invalid)
+        match char {
+            'C' => Ok(Club),
+            'D' => Ok(Diamond),
+            'H' => Ok(Heart),
+            'S' => Ok(Spade),
+            _ => Err(ParseError::Invalid),
+        }
     }
 }
 
 impl std::convert::From<Suit> for char {
     fn from(suit: Suit) -> Self {
-        suit.to_char()
+        suit.to_ascii_char()
     }
 }
 
@@ -68,7 +88,7 @@ impl std::convert::From<Suit> for &'static str {
 
 impl std::fmt::Display for Suit {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "{}", self.to_char())
+        write!(formatter, "{}", self.to_str())
     }
 }
 
