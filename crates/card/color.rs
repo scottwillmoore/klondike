@@ -35,7 +35,7 @@ impl Color {
 
 impl std::convert::From<Suit> for Color {
     fn from(suit: Suit) -> Self {
-        suit.to_color()
+        suit.color()
     }
 }
 

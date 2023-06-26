@@ -2,7 +2,7 @@ use std::io::{stdin, stdout, Write};
 
 use anyhow::Result;
 use card::*;
-use klondike::Game;
+use klondike::{Game, IndirectMove};
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
 use rand_xoshiro::Xoshiro256PlusPlus;
@@ -23,7 +23,6 @@ fn read_line(prompt: &str, line: &mut String) -> Result<()> {
 
 fn print_game(game: &Game) {
     let to_mark = |card: Card| card.to_ascii_mark();
-    // let to_mark = |card: Card| card.to_mark();
 
     println!(
         "{}\n",
@@ -91,10 +90,10 @@ pub fn main() -> Result<()> {
             "q" | "quit" => break,
             "s" | "show" => print_game(&game),
             _ => {
-                match line.trim().parse::<Card>() {
-                    Ok(card) => {
-                        println!("{} of {}s", card.rank().to_str(), card.suit().to_str());
-                        println!("{:?}", game.find_card(card));
+                match line.trim().parse::<IndirectMove>() {
+                    Ok(indirect_move) => {
+                        println!("{:?}", indirect_move,);
+                        println!("{:?}", game.can_indirect_move(indirect_move));
                     }
                     Err(error) => println!("Error: {}", error),
                 };

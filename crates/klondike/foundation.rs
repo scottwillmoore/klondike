@@ -1,49 +1,71 @@
-use card::{Rank, Suit};
+use std::array::from_fn;
+
+use card::{Card, Rank, Suit};
 use enum_trait::Enum;
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct FoundationPile {
     top_rank: Option<Rank>,
 }
 
 impl FoundationPile {
-    pub fn top_rank(&self) -> Option<Rank> {
+    fn new() -> FoundationPile {
+        FoundationPile { top_rank: None }
+    }
+
+    pub fn top_rank(&self) -> &Option<Rank> {
+        &self.top_rank
+    }
+
+    pub fn can_add(&self, rank: Rank) -> bool {
         self.top_rank
+            .map_or_else(Rank::first, Rank::next)
+            .is_some_and(|next_rank| next_rank == rank)
     }
 }
 
-const FOUNDATION_PILE_COUNT: usize = 4;
+pub type FoundationIndex = Suit;
 
-type FoundationPiles = [FoundationPile; FOUNDATION_PILE_COUNT];
+pub const FOUNDATION_PILE_COUNT: usize = FoundationIndex::LENGTH;
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+pub type FoundationPiles = [FoundationPile; FOUNDATION_PILE_COUNT];
+
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Foundation {
     piles: FoundationPiles,
 }
 
 impl Foundation {
+    pub(crate) fn new() -> Foundation {
+        Foundation {
+            piles: from_fn(|_| FoundationPile::new()),
+        }
+    }
+
+    pub fn get(&self, index: FoundationIndex) -> &FoundationPile {
+        &self.piles[index.to_index()]
+    }
+
+    pub fn top_card(&self, index: FoundationIndex) -> Option<Card> {
+        self.get(index)
+            .top_rank()
+            .map(|rank| Card::new(rank, index))
+    }
+
+    pub fn can_add(&self, card: Card) -> bool {
+        self.get(card.suit()).can_add(card.rank())
+    }
+
     pub fn piles(&self) -> &FoundationPiles {
         &self.piles
     }
 
-    pub fn enumerate_piles(&self) -> impl DoubleEndedIterator<Item = (Suit, &FoundationPile)> {
+    pub fn enumerate_piles(
+        &self,
+    ) -> impl DoubleEndedIterator<Item = (FoundationIndex, &FoundationPile)> {
         self.piles
             .iter()
             .enumerate()
-            .map(|(i, pile)| (Suit::from_index(i).unwrap(), pile))
-    }
-}
-
-impl std::ops::Index<Suit> for Foundation {
-    type Output = FoundationPile;
-
-    fn index(&self, index: Suit) -> &Self::Output {
-        &self.piles[index.to_index()]
-    }
-}
-
-impl std::ops::IndexMut<Suit> for Foundation {
-    fn index_mut(&mut self, index: Suit) -> &mut Self::Output {
-        &mut self.piles[index.to_index()]
+            .map(|(index, pile)| (FoundationIndex::from_index(index).unwrap(), pile))
     }
 }

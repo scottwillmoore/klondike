@@ -11,6 +11,10 @@ impl Card {
         Card { rank, suit }
     }
 
+    pub fn color(self) -> Color {
+        self.suit.into()
+    }
+
     pub fn rank(self) -> Rank {
         self.rank
     }
@@ -22,10 +26,6 @@ impl Card {
     // https://en.wikipedia.org/wiki/Playing_cards_in_Unicode
     pub fn to_char(self) -> char {
         todo!()
-    }
-
-    pub fn to_color(self) -> Color {
-        self.suit.into()
     }
 
     pub fn to_ascii_mark(self) -> String {
@@ -73,9 +73,9 @@ impl std::str::FromStr for Card {
         match (chars.next(), chars.next(), chars.next()) {
             (None, _, _) => Err(ParseError::TooShort),
             (Some(rank_char), Some(suit_char), None) => {
-                let rank = Rank::try_from(rank_char).ok();
-                let suit = Suit::try_from(suit_char).ok();
-                rank.zip(suit).map(Into::into).ok_or(ParseError::Invalid)
+                let rank = Rank::try_from(rank_char)?;
+                let suit = Suit::try_from(suit_char)?;
+                Ok(Card::new(rank, suit))
             }
             _ => Err(ParseError::TooLong),
         }

@@ -7,7 +7,7 @@ pub struct Stock {
 }
 
 impl Stock {
-    pub fn new(cards: &[Card]) -> Stock {
+    pub(crate) fn new(cards: &[Card]) -> Stock {
         assert_eq!(cards.len(), 24);
 
         Stock {
@@ -25,5 +25,14 @@ impl Stock {
 
     pub fn top_card(&self) -> Option<Card> {
         self.cards.front().copied()
+    }
+
+    pub(crate) fn try_remove(&mut self, card: Card) -> Result<(), ()> {
+        if self.top_card().is_some_and(|top_card| top_card == card) {
+            self.cards.pop_front();
+            Ok(())
+        } else {
+            Err(())
+        }
     }
 }

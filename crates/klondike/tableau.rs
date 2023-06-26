@@ -1,4 +1,5 @@
-use card::Card;
+use card::*;
+use enum_trait::Enum;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct TableauPile {
@@ -18,18 +19,40 @@ impl TableauPile {
         self.cards.iter().rev().copied()
     }
 
+    pub fn top_cards(&self) -> impl DoubleEndedIterator<Item = Card> + '_ {
+        self.cards[self.top_bottom_index..].iter().rev().copied()
+    }
+
+    pub fn top_card(&self) -> Option<Card> {
+        self.top_cards().next()
+    }
+
     pub fn bottom_cards(&self) -> impl DoubleEndedIterator<Item = Card> + '_ {
         self.cards[..self.top_bottom_index].iter().rev().copied()
     }
 
-    pub fn top_cards(&self) -> impl DoubleEndedIterator<Item = Card> + '_ {
-        self.cards[self.top_bottom_index..].iter().rev().copied()
+    pub fn can_add(&self, card: Card) -> bool {
+        self.top_card().map_or_else(
+            || card.rank() == King,
+            |top_card| {
+                let has_rank = top_card
+                    .rank()
+                    .previous()
+                    .is_some_and(|previous_rank| previous_rank == card.rank());
+
+                let has_suit = top_card.color() != card.color();
+
+                has_rank && has_suit
+            },
+        )
     }
 }
 
-const TABLEAU_PILE_COUNT: usize = 7;
+pub type TableauIndex = usize;
 
-type TableauPiles = [TableauPile; TABLEAU_PILE_COUNT];
+pub const TABLEAU_PILE_COUNT: usize = 7;
+
+pub type TableauPiles = [TableauPile; TABLEAU_PILE_COUNT];
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Tableau {
@@ -37,7 +60,7 @@ pub struct Tableau {
 }
 
 impl Tableau {
-    pub fn new(cards: &[Card]) -> Tableau {
+    pub(crate) fn new(cards: &[Card]) -> Tableau {
         assert_eq!(cards.len(), 28);
 
         let (a, cards) = cards.split_at(1);
@@ -61,25 +84,31 @@ impl Tableau {
         }
     }
 
+    pub fn get(&self, index: TableauIndex) -> &TableauPile {
+        &self.piles[index]
+    }
+
     pub fn piles(&self) -> &TableauPiles {
         &self.piles
     }
 
-    pub fn enumerate_piles(&self) -> impl DoubleEndedIterator<Item = (usize, &TableauPile)> {
+    pub fn enumerate_piles(&self) -> impl DoubleEndedIterator<Item = (TableauIndex, &TableauPile)> {
         self.piles.iter().enumerate()
     }
 }
 
-impl std::ops::Index<usize> for Tableau {
+/*
+impl std::ops::Index<TableauIndex> for Tableau {
     type Output = TableauPile;
 
-    fn index(&self, index: usize) -> &Self::Output {
+    fn index(&self, index: TableauIndex) -> &Self::Output {
         &self.piles[index]
     }
 }
 
-impl std::ops::IndexMut<usize> for Tableau {
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+impl std::ops::IndexMut<TableauIndex> for Tableau {
+    fn index_mut(&mut self, index: TableauIndex) -> &mut Self::Output {
         &mut self.piles[index]
     }
 }
+*/

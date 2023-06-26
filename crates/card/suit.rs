@@ -13,6 +13,15 @@ pub enum Suit {
 pub use Suit::*;
 
 impl Suit {
+    pub fn color(self) -> Color {
+        match self {
+            Club => Black,
+            Diamond => Red,
+            Heart => Red,
+            Spade => Black,
+        }
+    }
+
     pub fn to_ascii_char(self) -> char {
         match self {
             Club => 'C',
@@ -28,15 +37,6 @@ impl Suit {
             Diamond => '♦',
             Heart => '♥',
             Spade => '♠',
-        }
-    }
-
-    pub fn to_color(self) -> Color {
-        match self {
-            Club => Black,
-            Diamond => Red,
-            Heart => Red,
-            Spade => Black,
         }
     }
 
