@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod test;
 
+use std::hint::unreachable_unchecked;
 use std::iter::{Iterator, Map};
 use std::ops::Range;
 
@@ -8,18 +9,33 @@ pub use enum_trait_derive::Enum;
 
 pub type Variants<T> = Map<Range<usize>, fn(usize) -> T>;
 
-pub trait Enum {
+// TODO: Document the trait.
+
+// TODO: Document the unsafe contract that is required by this trait.
+// https://doc.rust-lang.org/std/keyword.unsafe.html
+// https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#implementing-an-unsafe-trait
+
+pub unsafe trait Enum {
     const LENGTH: usize;
 
     // Required methods
 
-    fn from_index(index: usize) -> Option<Self>
-    where
-        Self: Sized;
+    unsafe fn from_index_unchecked(index: usize) -> Self;
 
     fn to_index(self) -> usize;
 
     // Provided methods
+
+    fn from_index(index: usize) -> Option<Self>
+    where
+        Self: Sized,
+    {
+        if index < Self::LENGTH {
+            Some(unsafe { Self::from_index_unchecked(index) })
+        } else {
+            None
+        }
+    }
 
     fn first() -> Option<Self>
     where
@@ -49,6 +65,11 @@ pub trait Enum {
         self.to_index().checked_add(1).and_then(Self::from_index)
     }
 
+    // TODO: Once stabilised, it might be better to return a `impl Trait`.
+    // `fn variants() -> impl DoubleEndedIterator<Item = Self> + ExactSizeIterator`.
+    // https://github.com/rust-lang/rust/issues/91611
+    // https://stackoverflow.com/questions/76503213
+
     fn variants() -> Variants<Self>
     where
         Self: Sized,
@@ -57,13 +78,23 @@ pub trait Enum {
     }
 }
 
-impl Enum for () {
+// TODO: Document the trait.
+
+// TODO: Document the unsafe contract that is required by this trait.
+// https://doc.rust-lang.org/std/keyword.unsafe.html
+// https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#implementing-an-unsafe-trait
+
+pub unsafe trait EnumArray<T>: Enum {
+    type Array;
+}
+
+unsafe impl Enum for () {
     const LENGTH: usize = 1;
 
-    fn from_index(index: usize) -> Option<Self> {
+    unsafe fn from_index_unchecked(index: usize) -> Self {
         match index {
-            0 => Some(()),
-            _ => None,
+            0 => (),
+            _ => unreachable_unchecked(),
         }
     }
 
@@ -72,14 +103,18 @@ impl Enum for () {
     }
 }
 
-impl Enum for bool {
+unsafe impl<T> EnumArray<T> for () {
+    type Array = [T; Self::LENGTH];
+}
+
+unsafe impl Enum for bool {
     const LENGTH: usize = 2;
 
-    fn from_index(index: usize) -> Option<Self> {
+    unsafe fn from_index_unchecked(index: usize) -> Self {
         match index {
-            0 => Some(false),
-            1 => Some(true),
-            _ => None,
+            0 => false,
+            1 => true,
+            _ => unreachable_unchecked(),
         }
     }
 
@@ -91,28 +126,29 @@ impl Enum for bool {
     }
 }
 
+unsafe impl<T> EnumArray<T> for bool {
+    type Array = [T; Self::LENGTH];
+}
+
 macro_rules! impl_int {
     ($type:ty) => {
-        impl Enum for $type {
-            const LENGTH: usize = 1 << <$type>::BITS;
+        unsafe impl Enum for $type {
+            const LENGTH: usize = 1 << Self::BITS;
 
-            fn from_index(index: usize) -> Option<Self> {
-                if index < Self::LENGTH {
-                    Some((index as $type).wrapping_sub(<$type>::MIN))
-                } else {
-                    None
-                }
+            unsafe fn from_index_unchecked(index: usize) -> Self {
+                (index as Self).wrapping_sub(Self::MIN)
             }
 
             fn to_index(self) -> usize {
-                self.abs_diff(<$type>::MIN).into()
+                self.abs_diff(Self::MIN).into()
             }
+        }
+
+        unsafe impl<T> EnumArray<T> for $type {
+            type Array = [T; Self::LENGTH];
         }
     };
 }
 
 impl_int!(i8);
 impl_int!(u8);
-
-impl_int!(i16);
-impl_int!(u16);

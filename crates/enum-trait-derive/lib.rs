@@ -21,7 +21,7 @@ pub fn derive_enum(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
 
                         from_match_arms = quote! {
                             #from_match_arms
-                            #length => ::core::option::Option::Some(Self::#variant),
+                            #length => Self::#variant,
                         };
 
                         into_match_arms = quote! {
@@ -38,13 +38,13 @@ pub fn derive_enum(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
             if length > 0 {
                 quote! {
                     #[automatically_derived]
-                    impl ::enum_trait::Enum for #name {
+                    unsafe impl ::enum_trait::Enum for #name {
                         const LENGTH: ::core::primitive::usize = #length;
 
-                        fn from_index(index: ::core::primitive::usize) -> Option<Self> {
+                        unsafe fn from_index_unchecked(index: ::core::primitive::usize) -> Self {
                             match index {
                                 #from_match_arms
-                                _ => ::core::option::Option::None,
+                                _ => ::core::hint::unreachable_unchecked(),
                             }
                         }
 
@@ -53,6 +53,11 @@ pub fn derive_enum(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
                                 #into_match_arms
                             }
                         }
+                    }
+
+                    #[automatically_derived]
+                    unsafe impl<T> ::enum_trait::EnumArray<T> for #name {
+                        type Array = [T; Self::LENGTH];
                     }
                 }
             } else {
