@@ -67,6 +67,7 @@ impl std::str::FromStr for IndirectMove {
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum DirectMove {
+    Deal,
     FoundationToTableau {
         from: FoundationIndex,
         to: TableauIndex,
@@ -144,39 +145,38 @@ impl Game {
         None
     }
 
-    pub fn can_indirect_move(&self, indirect_move: IndirectMove) -> bool {
-        self.find_card(indirect_move.card)
-            .and_then(|position| match position {
-                Position::Foundation { index: from } => indirect_move.tableau_index.map(|to| {
-                    assert!(to < TABLEAU_PILE_COUNT);
-                    DirectMove::FoundationToTableau { from, to }
-                }),
+    pub fn resolve_indirect_move(&self, indirect_move: IndirectMove) -> Option<DirectMove> {
+        match self.find_card(indirect_move.card)? {
+            Position::Foundation { index: from } => indirect_move.tableau_index.map(|to| {
+                assert!(to < TABLEAU_PILE_COUNT);
+                DirectMove::FoundationToTableau { from, to }
+            }),
 
-                Position::Stock => Some(indirect_move.tableau_index.map_or(
-                    DirectMove::StockToFoundation,
+            Position::Stock => Some(indirect_move.tableau_index.map_or(
+                DirectMove::StockToFoundation,
+                |to| {
+                    assert!(to < TABLEAU_PILE_COUNT);
+                    DirectMove::StockToTableau { to }
+                },
+            )),
+
+            Position::Tableau { index: from, depth } => {
+                assert!(from < TABLEAU_PILE_COUNT);
+                Some(indirect_move.tableau_index.map_or(
+                    DirectMove::TableauToFoundation { from },
                     |to| {
                         assert!(to < TABLEAU_PILE_COUNT);
-                        DirectMove::StockToTableau { to }
+                        assert_ne!(from, to);
+                        DirectMove::TableauToTableau { from, depth, to }
                     },
-                )),
-
-                Position::Tableau { index: from, depth } => {
-                    assert!(from < TABLEAU_PILE_COUNT);
-                    Some(indirect_move.tableau_index.map_or(
-                        DirectMove::TableauToFoundation { from },
-                        |to| {
-                            assert!(to < TABLEAU_PILE_COUNT);
-                            assert_ne!(from, to);
-                            DirectMove::TableauToTableau { from, depth, to }
-                        },
-                    ))
-                }
-            })
-            .is_some_and(|direct_move| self.can_move(direct_move))
+                ))
+            }
+        }
     }
 
     pub fn can_move(&self, direct_move: DirectMove) -> bool {
         match direct_move {
+            DirectMove::Deal => self.stock.can_deal(),
             DirectMove::FoundationToTableau { from, to } => {
                 assert!(to < TABLEAU_PILE_COUNT);
                 self.foundation
@@ -217,32 +217,46 @@ impl Game {
         }
     }
 
-    pub fn play_indirect_move(&mut self, indirect_move: IndirectMove) {
-        todo!()
-    }
+    pub fn play_move(&mut self, direct_move: DirectMove) {
+        // This shouldn't have to check whether it can be moved twice...
+        // The implementation of these functions are not very sound at the moment!
+        if self.can_move(direct_move) {
+            match direct_move {
+                DirectMove::Deal => self.stock.deal(),
 
-    pub fn play_move(&mut self, direct_move: DirectMove) -> bool {
-        match direct_move {
-            DirectMove::FoundationToTableau { from, to } => {
-                assert!(to < TABLEAU_PILE_COUNT);
-                todo!()
-            }
-            DirectMove::StockToFoundation => {
-                todo!()
-            }
-            DirectMove::StockToTableau { to } => {
-                assert!(to < TABLEAU_PILE_COUNT);
-                todo!()
-            }
-            DirectMove::TableauToFoundation { from } => {
-                assert!(from < TABLEAU_PILE_COUNT);
-                todo!()
-            }
-            DirectMove::TableauToTableau { from, depth, to } => {
-                assert!(from < TABLEAU_PILE_COUNT);
-                assert!(to < TABLEAU_PILE_COUNT);
-                assert_ne!(from, to);
-                todo!()
+                DirectMove::FoundationToTableau { from, to } => {
+                    assert!(to < TABLEAU_PILE_COUNT);
+                    let rank = self.foundation.get_mut(from).pop_rank().unwrap();
+                    let card = rank.with_suit(from);
+                    self.tableau.get_mut(to).push_card(card);
+                }
+
+                DirectMove::StockToFoundation => {
+                    let card = self.stock.pop_card().unwrap();
+                    self.foundation.push_card(card);
+                }
+
+                DirectMove::StockToTableau { to } => {
+                    assert!(to < TABLEAU_PILE_COUNT);
+                    let card = self.stock.pop_card().unwrap();
+                    self.tableau.get_mut(to).push_card(card);
+                }
+
+                DirectMove::TableauToFoundation { from } => {
+                    assert!(from < TABLEAU_PILE_COUNT);
+                    let card = self.tableau.get_mut(from).pop_card().unwrap();
+                    self.foundation.push_card(card);
+                }
+
+                DirectMove::TableauToTableau { from, depth, to } => {
+                    assert!(from < TABLEAU_PILE_COUNT);
+                    assert!(to < TABLEAU_PILE_COUNT);
+                    assert_ne!(from, to);
+                    println!("{:?}, {:?}, {:?}", from, depth, to);
+                    let cards = self.tableau.get_mut(from).pop_cards(depth);
+                    println!("{:?}", cards);
+                    self.tableau.get_mut(to).push_cards(&cards);
+                }
             }
         }
     }

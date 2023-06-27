@@ -46,6 +46,36 @@ impl TableauPile {
             },
         )
     }
+
+    pub(crate) fn pop_card(&mut self) -> Option<Card> {
+        let new_len = self.cards.len() - 1;
+        if self.top_bottom_index == new_len {
+            self.top_bottom_index = self.top_bottom_index.saturating_sub(1);
+        }
+
+        self.cards.pop()
+    }
+
+    pub(crate) fn pop_cards(&mut self, depth: usize) -> Vec<Card> {
+        let top_cards_len = self.cards.len() - self.top_bottom_index;
+        assert!(depth < top_cards_len);
+        let new_len = self.cards.len() - depth - 1;
+
+        if self.top_bottom_index == new_len {
+            // Overflow! Check this...
+            self.top_bottom_index -= 1;
+        }
+
+        self.cards.drain(new_len..).collect()
+    }
+
+    pub(crate) fn push_card(&mut self, card: Card) {
+        self.cards.push(card);
+    }
+
+    pub(crate) fn push_cards(&mut self, cards: &[Card]) {
+        self.cards.extend(cards);
+    }
 }
 
 pub type TableauIndex = usize;
@@ -86,6 +116,10 @@ impl Tableau {
 
     pub fn get(&self, index: TableauIndex) -> &TableauPile {
         &self.piles[index]
+    }
+
+    pub(crate) fn get_mut(&mut self, index: TableauIndex) -> &mut TableauPile {
+        &mut self.piles[index]
     }
 
     pub fn piles(&self) -> &TableauPiles {

@@ -2,7 +2,7 @@ use std::io::{stdin, stdout, Write};
 
 use anyhow::Result;
 use card::*;
-use klondike::{Game, IndirectMove};
+use klondike::{DirectMove, Game, IndirectMove};
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
 use rand_xoshiro::Xoshiro256PlusPlus;
@@ -80,7 +80,7 @@ pub fn main() -> Result<()> {
     let mut deck = Deck::new();
     deck.cards_mut().shuffle(&mut generator);
 
-    let game = Game::new(deck);
+    let mut game = Game::new(deck);
     print_game(&game);
 
     loop {
@@ -88,12 +88,25 @@ pub fn main() -> Result<()> {
 
         match line.trim().to_lowercase().as_str() {
             "q" | "quit" => break,
-            "s" | "show" => print_game(&game),
+            "d" | "deal" => {
+                game.play_move(DirectMove::Deal);
+                print_game(&game);
+            }
             _ => {
                 match line.trim().parse::<IndirectMove>() {
                     Ok(indirect_move) => {
-                        println!("{:?}", indirect_move,);
-                        println!("{:?}", game.can_indirect_move(indirect_move));
+                        println!("{:?}", indirect_move);
+
+                        let Some(direct_move) = game.resolve_indirect_move(indirect_move) else { continue };
+                        println!("{:?}", direct_move);
+
+                        let can_move = game.can_move(direct_move);
+                        println!("{:?}", can_move);
+
+                        game.play_move(direct_move);
+
+                        println!();
+                        print_game(&game);
                     }
                     Err(error) => println!("Error: {}", error),
                 };

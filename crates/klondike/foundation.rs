@@ -22,6 +22,19 @@ impl FoundationPile {
             .map_or_else(Rank::first, Rank::next)
             .is_some_and(|next_rank| next_rank == rank)
     }
+
+    pub(crate) fn pop_rank(&mut self) -> Option<Rank> {
+        // This is a bad name for the function.
+        let rank = self.top_rank;
+        self.top_rank = rank.and_then(Rank::previous);
+        rank
+    }
+
+    pub(crate) fn push_rank(&mut self) {
+        // This is a bad name for the function.
+        // There is no check...
+        self.top_rank = self.top_rank.map_or_else(Rank::first, Rank::next);
+    }
 }
 
 pub type FoundationIndex = Suit;
@@ -46,6 +59,10 @@ impl Foundation {
         &self.piles[index.to_index()]
     }
 
+    pub fn get_mut(&mut self, index: FoundationIndex) -> &mut FoundationPile {
+        &mut self.piles[index.to_index()]
+    }
+
     pub fn top_card(&self, index: FoundationIndex) -> Option<Card> {
         self.get(index)
             .top_rank()
@@ -67,5 +84,16 @@ impl Foundation {
             .iter()
             .enumerate()
             .map(|(index, pile)| (FoundationIndex::from_index(index).unwrap(), pile))
+    }
+
+    pub(crate) fn pop_card(&mut self, suit: Suit) -> Option<Card> {
+        // This is a bad name for the function.
+        let rank = self.get_mut(suit).pop_rank();
+        rank.map(|rank| rank.with_suit(suit))
+    }
+
+    pub(crate) fn push_card(&mut self, card: Card) {
+        // This is a bad name for the function.
+        self.get_mut(card.suit()).push_rank();
     }
 }

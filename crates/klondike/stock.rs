@@ -27,12 +27,15 @@ impl Stock {
         self.cards.front().copied()
     }
 
-    pub(crate) fn try_remove(&mut self, card: Card) -> Result<(), ()> {
-        if self.top_card().is_some_and(|top_card| top_card == card) {
-            self.cards.pop_front();
-            Ok(())
-        } else {
-            Err(())
-        }
+    pub fn can_deal(&self) -> bool {
+        self.cards.len() > 0
+    }
+
+    pub(crate) fn deal(&mut self) {
+        self.cards.rotate_left(1);
+    }
+
+    pub(crate) fn pop_card(&mut self) -> Option<Card> {
+        self.cards.pop_front()
     }
 }
