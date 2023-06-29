@@ -1,43 +1,117 @@
 # `enum-trait`
 
+## Definitions
+
+An [**enumeration**](https://doc.rust-lang.org/reference/items/enumerations.html), which is usually just referred to as an **enum** is a ["nominal, heterogeneous disjoint union type"](https://doc.rust-lang.org/reference/types/enum.html). In functional programming literature it is a form of [algebraic data type](https://en.wikipedia.org/wiki/Algebraic_data_type) (ADT). An enum is defined defined with the [`enum`](https://doc.rust-lang.org/std/keyword.enum.html) keyword.
+
+An enum declares zero or more **variants** which have unique names. The `Direction` enum contains four variants: `North`, `East`, `South` and `West`. These are **unit** variants as they do not contain data.
+
+```rust
+enum Direction {
+    North,
+    East,
+    South,
+    West,
+}
+```
+
+There are also **tuple** and **struct** variants which can contain data. The `Name` enum contains two variants: `First` and `Full`. The `First` variant also contains data in the form of a tuple. The `Full` variant contains data in the form of a struct.
+
+```rust
+enum Name {
+    First(String),
+    Full {
+        first: String,
+        last: String,
+    },
+}
+```
+
+Enums can be classified into these categories:
+
+- An **empty** enum have no variants and can therefore never be instantiated. This is equivalent to the ["never"](https://doc.rust-lang.org/std/primitive.never.html) type.
+
+- A **fieldless** enum have one or more variants where no variants contain any fields in the form of a tuple or struct.
+
+- A **data** enum have one or more variants where one or more of these variants contain fields in the form of a tuple of struct.
+
+```rust
+enum Empty {}
+
+enum Fieldless {
+    A,
+    B,
+}
+
+enum Data {
+    A,
+    B(u32),
+    C {
+        a: u32,
+        b: u32,
+    },
+}
+```
+
+An enum provides **constructors** which can be used to create **instances**.
+
+```rust
+let direction = Direction::North;
+
+let first_name = Name::First("Scott".to_string());
+
+let full_name = Name::Full {
+    first: "Scott".to_string(),
+    last: "Moore".to_string(),
+};
+```
+
+In order to distinguish instances, each variant is assigned a **discriminant**. This discriminant is used to determine the variant of the instance, and therefore what data it may contain. For each enum, the discriminant is a unique integer which identifies the variants. By default the discriminant is a `isize`, however the compiler is free to use a smaller integer in the memory layout of the enum.
+
+The memory representation of an enum can be classified into these categories:
+
+- The Rust representation.
+
+- The Rust representation with specific discriminant: `#[repr(Int)]`.
+
+- The C representation: `#[repr(C)]`.
+
+- The C representation with specific discriminant: `#[repr(C, Int)]`.
+
+- The transparent representation: `#[repr(transparent)]`.
+
+TODO: Representations. Discriminant elision. Niches. Single variant?
+
 ## Goals
 
-- Get an `enum` discriminant, although may not be possible when niches are filled
+- Definition order.
+- Discriminant order.
 
-Values...
+Discriminants...
 
-- Iterate over all values of an `enum`
-- Get a bounded index (0 <= index < VALUE_COUNT) of `enum` values
-- Get the first, last value of an `enum`
-- Get the next, previous value of an `enum`
-
-Variants...
-
-- Get the name of a variant
-- Iterate over all variants (discriminants) of an `enum`
-- Get a bounded index (0 <= index < VARIANT_COUNT) of `enum` variants
-- Get the first, last variant of an `enum`
-- Get the next, previous variant of an `enum`
+- Get the the discriminant of an `enum`.
+- Iterate over all discriminants of an `enum`?
+- Get the first, last variant of an `enum`.
+- Get the next, previous variant of an `enum`.
 
 NOTE: Niches can be filled, therefore an `enum` may have no discriminant.
 
+Instances (or values)...
+
+- Iterate over all instances of an `enum`.
+- Get a unique bounded index (0 <= index < VALUE_COUNT) from each `enum` instance.
+- Get the first, last instance of an `enum`.
+- Get the next, previous instance of an `enum`.
+
+Variants...
+
+- Get the name of a variant.
+- Iterate over all variants of an `enum`.
+- Get a unique bounded index (0 <= index < VARIANT_COUNT) from each `enum` variant.
+- Get the first, last variant of an `enum`.
+- Get the next, previous variant of an `enum`.
+
 NOTE: A bounded index requires a lookup table if the `enum` discriminant has gaps.
-
-NOTE: Should an `enum` implement `Eq` or `Ord`?
-
-### Types
-
-- Empty: No variants. Equivalent to the `!` type.
-- Fieldless: Variants, but none have fields.
-- Data: Variants, but some have fields.
-
-### Representations
-
-- Rust representation.
-- Rust representation with specific discriminant: `#[repr(Int)]`.
-- C representation: `#[repr(C)]`.
-- C representation with specific discriminant: `#[repr(C, Int)]`.
-- Transparent representation: `#[repr(transparent)]`.
 
 ## References
 
