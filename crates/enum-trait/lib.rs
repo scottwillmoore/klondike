@@ -1,3 +1,5 @@
+//! TODO: Write documentation.
+
 #[cfg(test)]
 mod test;
 
@@ -15,6 +17,39 @@ pub type Variants<T> = Map<Range<usize>, fn(usize) -> T>;
 // https://doc.rust-lang.org/std/keyword.unsafe.html
 // https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#implementing-an-unsafe-trait
 
+/// A trait to map an `enum` to and from a `usize`.
+///
+/// The trait can be `derive`d.
+///
+/// TODO: Finish documentation.
+///
+/// # Conditions
+///
+/// 0 < index < LENGTH
+/// variant <=> index
+/// one-to-one
+/// isize maximum?
+/// `from_index_unchecked`
+/// `to_index`
+///
+/// # Examples
+///
+/// ```
+/// use enum_trait::Enum;
+///
+/// #[derive(Enum)]
+/// enum Direction {
+///     North,
+///     East,
+///     South,
+///     West,
+/// }
+///
+/// assert_eq!(Direction::North.to_index(), 0);
+/// assert_eq!(Direction::East.to_index(), 1);
+/// assert_eq!(Direction::South.to_index(), 2);
+/// assert_eq!(Direction::West.to_index(), 3);
+/// ```
 pub unsafe trait Enum {
     const LENGTH: usize;
 

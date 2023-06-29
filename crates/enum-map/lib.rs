@@ -102,15 +102,20 @@ where
     }
 
     pub fn get(&self, key: K) -> &V {
-        todo!()
-    }
+        let index = key.to_index();
+        let slice = self.as_slice();
 
-    pub fn get_key_value(&self, key: K) -> &V {
-        todo!()
+        // SAFE: The `index` is guaranteed to be smaller than the length of `slice`.
+        unsafe { slice.get_unchecked(index) }
     }
 
     pub fn get_mut(&mut self, key: K) -> &mut V {
-        todo!()
+        let index = key.to_index();
+        let slice = self.as_mut_slice();
+
+        // `get_unchecked_mut` requires an in-bounds index.
+        // `Enum::to_index()` is
+        unsafe { slice.get_unchecked_mut(index) }
     }
 
     // pub fn iter(&self) -> impl Iterator<Item = (&K, &V)> {
