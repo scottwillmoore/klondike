@@ -1,4 +1,52 @@
 //! TODO: Write documentation.
+//!
+//! # Overview
+//!
+//! The *values* of a type are all the different valid representations of that
+//! type.
+//!
+//! ## Primitives
+//!
+//! A `bool` has a size and alignment of 1. Despite this, it only has 2 valid
+//! *values*: `false` (`0x00`) and `true` (`0x01`). Any other representations
+//! are invalid, and therefore no *values*.
+//!
+//! A `u8` also has a size and alignment of 1. However, it has 256 valid
+//! *values*: `0` (`0x00`), `1` (`0x01`), ..., `255` (`0xFF`). There are no
+//! other representations.
+//!
+//! ## Non-primitives
+//!
+//! ### Array
+//!
+//! TODO: Add support.
+//!
+//! ### Enum
+//!
+//! An enum declares zero or more *variants* which can be either a *unit*,
+//! *tuple* or *struct*. Each *variant* has one or more *values*. A unit variant
+//! has only one value, while tuple and struct variants have one or more values
+//! which are a product of their *fields*.
+//!
+//! TODO: Add support.
+//!
+//! ### Struct
+//!
+//! A struct declare zero or more *fields*. Each *field* has one or more
+//! *values*. Both are product types, such that
+//!
+//! TODO: Add support.
+//!
+//! ### Tuple
+//!
+//! A tuple declare zero or more *fields*. Each *field* has one or more
+//! *values*. Both are product types, such that
+//!
+//! TODO: Add support.
+//!
+//! ### Union
+//!
+//! TODO: Add support.
 
 #[cfg(test)]
 mod test;
@@ -11,26 +59,9 @@ pub use enum_trait_derive::Enum;
 
 pub type Variants<T> = Map<Range<usize>, fn(usize) -> T>;
 
-// TODO: Document the trait.
-
-// TODO: Document the unsafe contract that is required by this trait.
-// https://doc.rust-lang.org/std/keyword.unsafe.html
-// https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#implementing-an-unsafe-trait
-
-/// A trait to map an `enum` to and from a `usize`.
+/// A trait to map the *values* of a type to and from bounded, unique integers.
 ///
-/// The trait can be `derive`d.
-///
-/// TODO: Finish documentation.
-///
-/// # Conditions
-///
-/// 0 < index < LENGTH
-/// variant <=> index
-/// one-to-one
-/// isize maximum?
-/// `from_index_unchecked`
-/// `to_index`
+/// TODO: Write documentation.
 ///
 /// # Examples
 ///
@@ -50,17 +81,28 @@ pub type Variants<T> = Map<Range<usize>, fn(usize) -> T>;
 /// assert_eq!(Direction::South.to_index(), 2);
 /// assert_eq!(Direction::West.to_index(), 3);
 /// ```
+///
+/// # Requirements
+///
+/// TODO: Document the unsafe contract that is required by this trait.
+///
+/// https://doc.rust-lang.org/std/keyword.unsafe.html
+/// https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#implementing-an-unsafe-trait
 pub unsafe trait Enum {
+    /// TODO: Write documentation.
     const LENGTH: usize;
 
     // Required methods
 
+    /// TODO: Write documentation.
     unsafe fn from_index_unchecked(index: usize) -> Self;
 
+    /// TODO: Write documentation.
     fn to_index(self) -> usize;
 
     // Provided methods
 
+    /// TODO: Write documentation.
     fn from_index(index: usize) -> Option<Self>
     where
         Self: Sized,
@@ -72,6 +114,7 @@ pub unsafe trait Enum {
         }
     }
 
+    /// TODO: Write documentation.
     fn first() -> Option<Self>
     where
         Self: Sized,
@@ -79,6 +122,7 @@ pub unsafe trait Enum {
         Self::from_index(0)
     }
 
+    /// TODO: Write documentation.
     fn last() -> Option<Self>
     where
         Self: Sized,
@@ -86,6 +130,7 @@ pub unsafe trait Enum {
         Self::from_index(Self::LENGTH - 1)
     }
 
+    /// TODO: Write documentation.
     fn previous(self) -> Option<Self>
     where
         Self: Sized,
@@ -93,6 +138,7 @@ pub unsafe trait Enum {
         self.to_index().checked_sub(1).and_then(Self::from_index)
     }
 
+    /// TODO: Write documentation.
     fn next(self) -> Option<Self>
     where
         Self: Sized,
@@ -105,6 +151,7 @@ pub unsafe trait Enum {
     // https://github.com/rust-lang/rust/issues/91611
     // https://stackoverflow.com/questions/76503213
 
+    /// TODO: Write documentation.
     fn variants() -> Variants<Self>
     where
         Self: Sized,
@@ -113,14 +160,26 @@ pub unsafe trait Enum {
     }
 }
 
-// TODO: Document the trait.
-
-// TODO: Document the unsafe contract that is required by this trait.
-// https://doc.rust-lang.org/std/keyword.unsafe.html
-// https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#implementing-an-unsafe-trait
-
+/// TODO: Write documentation.
+///
+/// # Requirements
+///
+/// TODO: Document the unsafe contract that is required by this trait.
+///
+/// https://doc.rust-lang.org/std/keyword.unsafe.html
+/// https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html#implementing-an-unsafe-trait
 pub unsafe trait EnumArray<T>: Enum {
     type Array;
+}
+
+/// TODO: Write documentation.
+#[macro_export]
+macro_rules! impl_enum_array {
+    ($type:ty) => {
+        unsafe impl<T> $crate::EnumArray<T> for $type {
+            type Array = [T; Self::LENGTH];
+        }
+    };
 }
 
 unsafe impl Enum for () {
@@ -138,9 +197,7 @@ unsafe impl Enum for () {
     }
 }
 
-unsafe impl<T> EnumArray<T> for () {
-    type Array = [T; Self::LENGTH];
-}
+impl_enum_array!(());
 
 unsafe impl Enum for bool {
     const LENGTH: usize = 2;
@@ -161,9 +218,7 @@ unsafe impl Enum for bool {
     }
 }
 
-unsafe impl<T> EnumArray<T> for bool {
-    type Array = [T; Self::LENGTH];
-}
+impl_enum_array!(bool);
 
 macro_rules! impl_int {
     ($type:ty) => {
@@ -179,9 +234,7 @@ macro_rules! impl_int {
             }
         }
 
-        unsafe impl<T> EnumArray<T> for $type {
-            type Array = [T; Self::LENGTH];
-        }
+        impl_enum_array!($type);
     };
 }
 

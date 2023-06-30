@@ -1,6 +1,9 @@
+//! TODO: Write documentation.
+
 use quote::quote;
 use syn::{parse_macro_input, Data, DeriveInput, Fields};
 
+/// TODO: Write documentation.
 #[proc_macro_derive(Enum)]
 pub fn derive_enum(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
@@ -56,9 +59,7 @@ pub fn derive_enum(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
                     }
 
                     #[automatically_derived]
-                    unsafe impl<T> ::enum_trait::EnumArray<T> for #name {
-                        type Array = [T; Self::LENGTH];
-                    }
+                    ::enum_trait::impl_enum_array!(#name);
                 }
             } else {
                 todo!()

@@ -80,14 +80,18 @@ The memory representation of an enum can be classified into these categories:
 
 - The transparent representation: `#[repr(transparent)]`.
 
-TODO: Representations. Discriminant elision. Niches. Single variant?
+TODO:
+
+- Representations.
+- Discriminant elision.
+- Niches.
+- Single variant?
+
+https://play.rust-lang.org/?version=nightly&mode=release&edition=2021&gist=61eb426addd0bda0f0bdf52055bcc37d
 
 ## Goals
 
-- Definition order.
-- Discriminant order.
-
-Discriminants...
+### Discriminants
 
 - Get the the discriminant of an `enum`.
 - Iterate over all discriminants of an `enum`?
@@ -96,20 +100,63 @@ Discriminants...
 
 NOTE: Niches can be filled, therefore an `enum` may have no discriminant.
 
-Instances (or values)...
+### Values
 
-- Iterate over all instances of an `enum`.
-- Get a unique bounded index (0 <= index < VALUE_COUNT) from each `enum` instance.
-- Get the first, last instance of an `enum`.
-- Get the next, previous instance of an `enum`.
+- Iterate over all values of an `enum`.
+- Get a unique bounded index (0 <= index < VALUE_COUNT) from each `enum` value?
+- Get the first, last value of an `enum`.
+- Get the next, previous value of an `enum`.
 
-Variants...
+NOTE: Iteration could be ordered by definition, or by discriminant, or neither.
+
+NOTE: A bounded index requires a lookup table if the `enum` discriminant has gaps.
+
+```rust
+pub trait Values {
+    fn values() -> impl Iterator<Item = Self>;
+
+    fn first() -> Option<Self>;
+    fn previous(&self) -> Option<Self>;
+    fn next(&self) -> Option<Self>;
+    fn last() -> Option<Self>;
+}
+
+pub unsafe trait IndexValues {
+    const MAX: usize;
+
+    unsafe fn from_index_unchecked(index: usize) -> Self;
+    fn from_index(index: usize) -> Option<Self>;
+
+    fn to_index(self) -> usize;
+}
+
+impl<T> Values for T where T: IndexValues;
+```
+
+### Variants
 
 - Get the name of a variant.
 - Iterate over all variants of an `enum`.
-- Get a unique bounded index (0 <= index < VARIANT_COUNT) from each `enum` variant.
+- Get a unique bounded index (0 <= index < VARIANT_COUNT) from each `enum` variant?
 - Get the first, last variant of an `enum`.
 - Get the next, previous variant of an `enum`.
+
+```rust
+pub trait Variants {
+    const LENGTH: usize;
+
+    type Variant: Values;
+
+    fn variants() -> impl Iterator<Item = Variant>;
+
+    fn first() -> Option<Variant>;
+    fn previous(&self) -> Option<Variant>;
+    fn next(&self) -> Option<Variant>;
+    fn last() -> Option<Variant>;
+}
+```
+
+NOTE: Iteration could be ordered by definition, or by discriminant, or neither.
 
 NOTE: A bounded index requires a lookup table if the `enum` discriminant has gaps.
 
