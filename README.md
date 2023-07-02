@@ -1,6 +1,6 @@
 # Klondike
 
-An implementation of [Klondike](<https://en.wikipedia.org/wiki/Klondike_(solitaire)>), the most popular version of [Solitaire](https://en.wikipedia.org/wiki/Solitaire), in [Rust](https://www.rust-lang.org/)! While this project should support traditional Klondike, the aim was to support the less popular, but more skillful, ["Thoughtful Klondike"](<https://en.wikipedia.org/wiki/Klondike_(solitaire)#Probability_of_winning>).
+An implementation of [Klondike](<https://en.wikipedia.org/wiki/Klondike_(solitaire)>), the most popular version of [Solitaire](https://en.wikipedia.org/wiki/Solitaire), in [Rust](https://www.rust-lang.org/)! While this project should support traditional Klondike, the aim is to support the less popular, but more skillful, ["Thoughtful Klondike"](<https://en.wikipedia.org/wiki/Klondike_(solitaire)#Probability_of_winning>).
 
 > The best information about the winnability of Klondike concerns a modified version of the game called "Thoughtful Solitaire" or "Thoughtful Klondike", in which the location of all 52 cards is known.
 

@@ -5,3 +5,5 @@
 /result/
 /target/
 dist/
+
+package-lock.json

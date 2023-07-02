@@ -1,0 +1,23 @@
+{
+	"$schema": "node_modules/rome/configuration_schema.json",
+	"files": {
+		"ignore": ["package-lock.json"]
+	},
+	"formatter": {
+		"enabled": false
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true
+		}
+	},
+	"organizeImports": {
+		"enabled": false
+	},
+	"vcs": {
+		"clientKind": "git",
+		"enabled": true,
+		"useIgnoreFile": true
+	}
+}

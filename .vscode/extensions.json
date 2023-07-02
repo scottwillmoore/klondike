@@ -1,6 +1,8 @@
 {
 	"recommendations": [
+		"esbenp.prettier-vscode",
 		"jnoortheen.nix-ide",
+		"rome.rome",
 		"rubymaniac.vscode-direnv",
 		"rust-lang.rust-analyzer",
 		"tamasfe.even-better-toml"
