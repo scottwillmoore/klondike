@@ -1,18 +1,37 @@
-*,
+:root {
+	box-sizing: border-box;
+}
+
 *::before,
+*,
 *::after {
 	box-sizing: inherit;
 }
 
-html {
-	box-sizing: border-box;
+/**/
+
+*::before,
+*,
+*::after {
+	border-style: solid;
+	border-width: 0;
 }
 
-html,
+/**/
+
+:root {
+	font-family: system-ui, sans-serif;
+}
+
+/**/
+
+:root,
 body,
 #root {
 	height: 100%;
 }
+
+/**/
 
 body {
 	margin: 0;
