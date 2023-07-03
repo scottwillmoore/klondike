@@ -14,18 +14,27 @@
 	border-radius: 8px;
 	border-width: 1px;
 	box-shadow: 0 2px 4px hsla(0, 0%, 0%, 0.1);
-	font-family: monospace;
 
+	cursor: grab;
 	touch-action: none;
 	user-select: none;
 }
 
-.card_black {
+.card_isDisabled {
+	cursor: unset;
+}
+
+.card_isBlack {
 	color: hsl(0, 0%, 20%);
 }
 
-.card_red {
+.card_isRed {
 	color: hsl(0, 80%, 40%);
+}
+
+.card_isDragging {
+	z-index: 1;
+	cursor: grabbing;
 }
 
 .suit {
@@ -40,11 +49,11 @@
 }
 
 .id_topLeft {
-	top: 8px;
-	left: 8px;
+	top: 12px;
+	left: 12px;
 }
 
 .id_bottomRight {
-	bottom: 8px;
-	right: 8px;
+	bottom: 12px;
+	right: 12px;
 }

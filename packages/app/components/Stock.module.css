@@ -1,0 +1,8 @@
+.stock {
+	display: flex;
+	flex-direction: row;
+}
+
+.stock > * + * {
+	margin-left: calc(-128px + 40px);
+}

@@ -1,0 +1,8 @@
+.foundation {
+	display: flex;
+	flex-direction: row;
+}
+
+.foundation > * + * {
+	margin-left: 16px;
+}
