@@ -1,36 +1,25 @@
+import { DndContext } from "@dnd-kit/core";
 import { FunctionComponent } from "react";
 
-import { Card } from "./Card";
+import { Card, ranks, suits } from "./Card";
+import { Stack } from "./Stack";
 
 import css from "./App.module.css";
 
-const ranks = {
-	ace: "A",
-	two: "2",
-	three: "3",
-	four: "4",
-	five: "5",
-	six: "6",
-	seven: "7",
-	eight: "8",
-	nine: "9",
-	ten: "T",
-	jack: "J",
-	queen: "Q",
-	king: "K",
-};
-
-const suits = {
-	club: "♣",
-	diamond: "♦",
-	heart: "♥",
-	spade: "♠",
-};
-
 export const App: FunctionComponent = () => {
+	const stacks = ["a", "b"];
 	return (
-		<div className={css.app}>
-			<Card rank={ranks.two} suit={suits.spade} />
-		</div>
+		<DndContext>
+			<div className={css.app}>
+				<Stack id="a">
+					<Card rank={ranks.ten} suit={suits.spade} />
+					<Card rank={ranks.jack} suit={suits.diamond} />
+					<Card rank={ranks.queen} suit={suits.heart} />
+					<Card rank={ranks.king} suit={suits.spade} />
+				</Stack>
+				<Stack id="b" />
+				<Card rank={ranks.two} suit={suits.spade} />
+			</div>
+		</DndContext>
 	);
 };

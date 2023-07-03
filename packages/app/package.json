@@ -6,6 +6,8 @@
 		"watch": "vite"
 	},
 	"dependencies": {
+		"@dnd-kit/core": "^6.0.8",
+		"classix": "^2.1.33",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
 	},

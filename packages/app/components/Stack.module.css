@@ -1,0 +1,17 @@
+.stack {
+	width: 128px;
+	height: calc(128px * 1.4);
+
+	background-color: hsl(0, 0%, 95%);
+	border-color: hsl(0, 0%, 85%);
+	border-radius: 8px;
+	border-width: 1px;
+}
+
+.stack > * + * {
+	margin-top: calc(-128px * 1.4 + 48px);
+}
+
+.isOver {
+	background-color: hsl(120, 25%, 95%);
+}

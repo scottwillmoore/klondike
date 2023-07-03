@@ -8,31 +8,48 @@
 
 	width: 128px;
 	height: calc(128px * 1.4);
-	border-radius: 8px;
 
 	background-color: hsl(0, 0%, 100%);
+	border-color: hsl(0, 0%, 90%);
+	border-radius: 8px;
+	border-width: 1px;
 	box-shadow: 0 2px 4px hsla(0, 0%, 0%, 0.1);
 
+	cursor: grab;
+	touch-action: none;
 	user-select: none;
 }
 
-.suit {
-	font-size: 48px;
+.card_isBlack {
+	color: hsl(0, 0%, 20%);
 }
 
-.mark {
+.card_isRed {
+	color: hsl(0, 80%, 40%);
+}
+
+.card_isDragging {
+	z-index: 1;
+	cursor: grabbing;
+}
+
+.suit {
+	font-size: 64px;
+}
+
+.id {
 	position: absolute;
 
-	font-size: 12px;
+	font-size: 16px;
 	font-weight: 700;
 }
 
-.topLeft {
+.id_topLeft {
 	top: 12px;
 	left: 12px;
 }
 
-.bottomRight {
+.id_bottomRight {
 	bottom: 12px;
 	right: 12px;
 }
