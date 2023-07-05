@@ -5,6 +5,8 @@
 		"lib": ["ESNext"],
 		"module": "ESNext",
 		"moduleResolution": "Node",
+		"noEmit": false,
 		"target": "ESNext"
-	}
+	},
+	"files": ["./index.ts"]
 }

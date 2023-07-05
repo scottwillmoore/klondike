@@ -1,8 +1,13 @@
 {
 	"name": "card",
 	"scripts": {
-		"build": "",
+		"build": "tsc",
 		"clean": "rimraf ./.turbo",
+		"start": "tsx ./index",
 		"watch": ""
+	},
+	"devDependencies": {
+		"@types/node": "^20.3.3",
+		"tsx": "^3.12.7"
 	}
 }
