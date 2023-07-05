@@ -56,6 +56,26 @@ A binary format? Provide a derived description of the move, which includes all i
 
 - https://rust-lang.github.io/api-guidelines/naming.html
 
+#### WASM
+
+- https://rustwasm.github.io/
+- https://rustwasm.github.io/docs/wasm-pack/
+- https://rustwasm.github.io/docs/wasm-bindgen/
+- https://surma.dev/things/rust-to-webassembly/
+- https://github.com/rustwasm/awesome-rust-and-webassembly
+- https://github.com/rustwasm/wasm-bindgen/issues/2073
+- https://wasmtime.dev/
+- https://github.com/bytecodealliance/wit-bindgen
+- https://wasmer.io/
+- https://wasmer.io/posts/WAI-is-the-answer
+- https://github.com/wasmerio/wai
+- https://wapm.io/
+- https://www.fermyon.com/blog/webassembly-component-model
+- https://github.com/bytecodealliance/wasm-tools
+- https://github.com/bytecodealliance/jco
+- https://github.com/Menci/vite-plugin-wasm
+- https://github.com/WebAssembly/wabt
+
 ### Random Number Generation
 
 - https://docs.rs/rand/latest/rand/

@@ -25,9 +25,20 @@
       devShells.default = packages.mkShell {
         name = "klondike";
         nativeBuildInputs = with packages; [
+          binaryen
+          cargo-audit
+          cargo-edit
           cargo-expand
+          cargo-release
+          cargo-watch
           nodejs
-          rustChannels.stable.default
+          (rustChannels.stable.complete.override {
+            targets = ["wasm32-unknown-unknown"];
+          })
+          twiggy
+          wabt
+          wasm-bindgen-cli
+          wasm-pack
         ];
       };
     });
