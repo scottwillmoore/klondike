@@ -1,0 +1,8 @@
+{
+	"name": "card",
+	"scripts": {
+		"build": "",
+		"clean": "rimraf ./.turbo",
+		"watch": ""
+	}
+}

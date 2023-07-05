@@ -1,0 +1,3 @@
+# `card-wasm`
+
+A test library for WASM integration. It is a mini reimplementation of the `card` library for experimentation. This should be merged into the current `card` library, unless it makes sense to keep them separate...
