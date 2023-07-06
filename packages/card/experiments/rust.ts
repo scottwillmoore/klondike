@@ -12,6 +12,10 @@ enum ADiscriminant {
 	C = 2,
 }
 
+// type A = {
+// 	discriminant: ADiscriminant;
+// };
+
 type A = ADiscriminant;
 
 let a: A;
