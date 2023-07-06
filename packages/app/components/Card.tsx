@@ -47,24 +47,28 @@ export const suitToColor: Record<Suit, Color> = {
 export type CardProps = {
 	rank: Rank;
 	suit: Suit;
+	faceDown?: boolean;
 };
 
-export const Card: FunctionComponent<CardProps> = ({ rank, suit }) => {
+export const Card: FunctionComponent<CardProps> = ({
+	rank,
+	suit,
+	faceDown = false,
+}) => {
+	const color = suitToColor[suit];
 	const id = rank + suit;
 
-	const color = suitToColor[suit];
-
-	const classNames = cx(
-		css.card,
-		color === colors.black && css.card_black,
-		color === colors.red && css.card_red
-	);
-
 	return (
-		<div className={classNames}>
-			<span className={cx(css.id, css.id_topLeft)}>{id}</span>
+		<div
+			className={cx(
+				css.card,
+				color === colors.black ? css.cardBlack : css.cardRed,
+				faceDown ? css.cardFaceDown : css.cardFaceUp
+			)}
+		>
+			<span className={cx(css.id, css.idTopLeft)}>{id}</span>
 			<span className={css.suit}>{suit}</span>
-			<span className={cx(css.id, css.id_bottomRight)}>{id}</span>
+			<span className={cx(css.id, css.idBottomRight)}>{id}</span>
 		</div>
 	);
 };

@@ -12,7 +12,7 @@ export const Foundation: FunctionComponent = () => {
 				<Card rank={ranks.ace} suit={suits.club} />
 			</FoundationPile>
 			<FoundationPile>
-				<Card rank={ranks.ace} suit={suits.diamond} />
+				<Card rank={ranks.ace} suit={suits.diamond} faceDown={false} />
 				<Card rank={ranks.two} suit={suits.diamond} />
 			</FoundationPile>
 			<FoundationPile></FoundationPile>

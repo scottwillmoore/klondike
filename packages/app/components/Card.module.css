@@ -9,7 +9,6 @@
 	width: 128px;
 	height: calc(128px * 1.4);
 
-	background-color: hsl(0, 0%, 100%);
 	border-color: hsl(0, 0%, 90%);
 	border-radius: 8px;
 	border-width: 1px;
@@ -20,12 +19,28 @@
 	user-select: none;
 }
 
-.card_black {
+.cardBlack {
 	color: hsl(0, 0%, 20%);
 }
 
-.card_red {
+.cardRed {
 	color: hsl(0, 80%, 40%);
+}
+
+.cardFaceDown {
+	background-color: hsl(0, 0%, 98%);
+}
+
+.cardFaceDown.cardRed {
+	color: hsl(0, 40%, 40%);
+}
+
+.cardFaceDown.cardBlack {
+	color: hsl(0, 0%, 40%);
+}
+
+.cardFaceUp {
+	background-color: hsl(0, 0%, 100%);
 }
 
 .suit {
@@ -39,12 +54,12 @@
 	font-weight: 700;
 }
 
-.id_topLeft {
+.idTopLeft {
 	top: 8px;
 	left: 8px;
 }
 
-.id_bottomRight {
+.idBottomRight {
 	bottom: 8px;
 	right: 8px;
 }

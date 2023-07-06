@@ -9,9 +9,13 @@ import css from "./App.module.css";
 export const App: FunctionComponent = () => {
 	return (
 		<div className={css.app}>
-			<Foundation />
-			<Stock />
-			<Tableau />
+			<div className={css.stockFoundation}>
+				<Stock />
+				<Foundation />
+			</div>
+			<div className={css.tableau}>
+				<Tableau />
+			</div>
 		</div>
 	);
 };

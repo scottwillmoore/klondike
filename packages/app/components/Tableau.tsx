@@ -9,8 +9,8 @@ export const Tableau: FunctionComponent = () => {
 	return (
 		<div className={css.tableau}>
 			<TableauPile>
-				<Card rank={ranks.ten} suit={suits.spade} />
-				<Card rank={ranks.jack} suit={suits.diamond} />
+				<Card rank={ranks.ten} suit={suits.spade} faceDown />
+				<Card rank={ranks.jack} suit={suits.diamond} faceDown />
 				<Card rank={ranks.queen} suit={suits.heart} />
 				<Card rank={ranks.king} suit={suits.spade} />
 			</TableauPile>
