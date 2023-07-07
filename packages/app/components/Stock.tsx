@@ -5,7 +5,9 @@ import { Card } from "./Card";
 
 import css from "./Stock.module.css";
 
-export const Stock: FunctionComponent = () => {
+export type StockProps = {};
+
+export const Stock: FunctionComponent<StockProps> = () => {
 	return (
 		<div className={css.stock}>
 			<Card card={{ rank: Rank.Seven, suit: Suit.Spade }} faceDown />

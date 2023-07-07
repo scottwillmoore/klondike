@@ -1,12 +1,22 @@
 import { FunctionComponent } from "react";
 
 import { Rank, Suit } from "../models";
+import { ChildrenProps } from "../utilities";
 import { Card } from "./Card";
-import { FoundationPile } from "./FoundationPile";
 
 import css from "./Foundation.module.css";
 
-export const Foundation: FunctionComponent = () => {
+export type FoundationPileProps = ChildrenProps;
+
+export const FoundationPile: FunctionComponent<FoundationPileProps> = ({
+	children,
+}) => {
+	return <div className={css.foundationPile}>{children}</div>;
+};
+
+export type FoundationProps = {};
+
+export const Foundation: FunctionComponent<FoundationProps> = () => {
 	return (
 		<div className={css.foundation}>
 			<FoundationPile>
@@ -16,8 +26,8 @@ export const Foundation: FunctionComponent = () => {
 				<Card card={{ rank: Rank.Ace, suit: Suit.Diamond }} faceDown />
 				<Card card={{ rank: Rank.Two, suit: Suit.Diamond }} />
 			</FoundationPile>
-			<FoundationPile></FoundationPile>
-			<FoundationPile></FoundationPile>
+			<FoundationPile>{}</FoundationPile>
+			<FoundationPile>{}</FoundationPile>
 		</div>
 	);
 };

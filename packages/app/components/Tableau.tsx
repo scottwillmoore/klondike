@@ -1,12 +1,22 @@
 import { FunctionComponent } from "react";
 
 import { Rank, Suit } from "../models";
+import { ChildrenProps } from "../utilities";
 import { Card } from "./Card";
-import { TableauPile } from "./TableauPile";
 
 import css from "./Tableau.module.css";
 
-export const Tableau: FunctionComponent = () => {
+export type TableauPileProps = ChildrenProps;
+
+export const TableauPile: FunctionComponent<TableauPileProps> = ({
+	children,
+}) => {
+	return <div className={css.tableauPile}>{children}</div>;
+};
+
+export type TableauProps = {};
+
+export const Tableau: FunctionComponent<TableauProps> = () => {
 	return (
 		<div className={css.tableau}>
 			<TableauPile>
@@ -15,12 +25,12 @@ export const Tableau: FunctionComponent = () => {
 				<Card card={{ rank: Rank.King, suit: Suit.Spade }} />
 				<Card card={{ rank: Rank.Queen, suit: Suit.Heart }} />
 			</TableauPile>
-			<TableauPile></TableauPile>
-			<TableauPile></TableauPile>
-			<TableauPile></TableauPile>
-			<TableauPile></TableauPile>
-			<TableauPile></TableauPile>
-			<TableauPile></TableauPile>
+			<TableauPile>{}</TableauPile>
+			<TableauPile>{}</TableauPile>
+			<TableauPile>{}</TableauPile>
+			<TableauPile>{}</TableauPile>
+			<TableauPile>{}</TableauPile>
+			<TableauPile>{}</TableauPile>
 		</div>
 	);
 };
