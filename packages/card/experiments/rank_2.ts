@@ -1,10 +1,7 @@
 declare const brand: unique symbol;
 type Brand<T, U> = T & { [brand]?: U };
 
-type Range<
-	End extends number,
-	Array extends unknown[] = []
-> = End extends Array["length"]
+type Range<End extends number, Array extends unknown[] = []> = End extends Array["length"]
 	? Array[number]
 	: Range<End, [...Array, Array["length"]]>;
 

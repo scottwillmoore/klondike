@@ -1,8 +1,6 @@
-export type Tuple<
-	T,
-	TLength extends number,
-	TArray extends unknown[] = []
-> = TArray extends { length: TLength }
+export type Tuple<T, TLength extends number, TArray extends unknown[] = []> = TArray extends {
+	length: TLength;
+}
 	? TArray
 	: Tuple<T, TLength, [...TArray, T]>;
 

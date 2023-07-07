@@ -9,9 +9,7 @@ import css from "./Foundation.module.css";
 
 type FoundationPileProps = ChildrenProps;
 
-const FoundationPile: FunctionComponent<FoundationPileProps> = ({
-	children,
-}) => {
+const FoundationPile: FunctionComponent<FoundationPileProps> = ({ children }) => {
 	return <div className={css.foundationPile}>{children}</div>;
 };
 

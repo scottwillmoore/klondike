@@ -10,10 +10,7 @@ export type CardProps = {
 	faceDown?: boolean;
 };
 
-export const Card: FunctionComponent<CardProps> = ({
-	card,
-	faceDown = false,
-}) => {
+export const Card: FunctionComponent<CardProps> = ({ card, faceDown = false }) => {
 	const color = models.Card.toColor(card);
 	const identifier = models.Card.toIdentifier(card);
 	const suit = models.Suit.toCharacter(card.suit);
@@ -23,16 +20,12 @@ export const Card: FunctionComponent<CardProps> = ({
 			className={classNames(
 				styles.card,
 				color === models.Color.Black ? styles.cardBlack : styles.cardRed,
-				faceDown ? styles.cardFaceDown : styles.cardFaceUp
+				faceDown ? styles.cardFaceDown : styles.cardFaceUp,
 			)}
 		>
-			<span className={classNames(styles.identifier, styles.identifierTopLeft)}>
-				{identifier}
-			</span>
+			<span className={classNames(styles.identifier, styles.identifierTopLeft)}>{identifier}</span>
 			<span className={styles.suit}>{suit}</span>
-			<span
-				className={classNames(styles.identifier, styles.identifierBottomRight)}
-			>
+			<span className={classNames(styles.identifier, styles.identifierBottomRight)}>
 				{identifier}
 			</span>
 		</div>

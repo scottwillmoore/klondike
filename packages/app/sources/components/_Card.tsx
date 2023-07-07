@@ -60,31 +60,25 @@ export const Card: FunctionComponent<CardProps> = ({ rank, suit }) => {
 	const isBlack = color === colors.black;
 	const isRed = color === colors.red;
 
-	const { attributes, isDragging, listeners, setNodeRef, transform } =
-		useDraggable({ id, disabled: isDisabled });
+	const { attributes, isDragging, listeners, setNodeRef, transform } = useDraggable({
+		id,
+		disabled: isDisabled,
+	});
 
 	const classNames = cx(
 		css.card,
 		isDisabled && css.card_isDisabled,
 		isBlack && css.card_isBlack,
 		isRed && css.card_isRed,
-		isDragging && css.card_isDragging
+		isDragging && css.card_isDragging,
 	);
 
 	const styles = {
-		transform: transform
-			? `translate(${transform.x}px, ${transform.y}px)`
-			: undefined,
+		transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
 	};
 
 	return (
-		<div
-			className={classNames}
-			ref={setNodeRef}
-			style={styles}
-			{...attributes}
-			{...listeners}
-		>
+		<div className={classNames} ref={setNodeRef} style={styles} {...attributes} {...listeners}>
 			<span className={cx(css.id, css.id_topLeft)}>{id}</span>
 			<span className={css.suit}>{suit}</span>
 			<span className={cx(css.id, css.id_bottomRight)}>{id}</span>
