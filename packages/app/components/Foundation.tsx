@@ -1,20 +1,23 @@
 import { FunctionComponent } from "react";
 
+// import * as models from "../models";
 import { Rank, Suit } from "../models";
 import { ChildrenProps } from "../utilities";
 import { Card } from "./Card";
 
 import css from "./Foundation.module.css";
 
-export type FoundationPileProps = ChildrenProps;
+type FoundationPileProps = ChildrenProps;
 
-export const FoundationPile: FunctionComponent<FoundationPileProps> = ({
+const FoundationPile: FunctionComponent<FoundationPileProps> = ({
 	children,
 }) => {
 	return <div className={css.foundationPile}>{children}</div>;
 };
 
-export type FoundationProps = {};
+export type FoundationProps = {
+	// foundation: models.Foundation;
+};
 
 export const Foundation: FunctionComponent<FoundationProps> = () => {
 	return (

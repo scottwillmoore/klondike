@@ -3,10 +3,14 @@
 	"pipeline": {
 		"build": {
 			"dependsOn": ["^build"],
-			"outputs": []
+			"outputs": ["./dist"]
 		},
 		"clean": {
 			"cache": false
+		},
+		"test": {
+			"dependsOn": ["build"],
+			"outputs": ["./.vitest"]
 		},
 		"watch": {
 			"cache": false,

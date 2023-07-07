@@ -3,6 +3,9 @@
 	"scripts": {
 		"build": "vite build",
 		"clean": "rimraf ./.turbo ./.vite ./dist",
+		"test": "run-s test:*",
+		"test:sources": "vitest --run",
+		"test:types": "vitest typecheck --run",
 		"watch": "vite"
 	},
 	"dependencies": {
@@ -15,6 +18,7 @@
 		"@types/react": "^18.2.14",
 		"@types/react-dom": "^18.2.6",
 		"@vitejs/plugin-react": "^4.0.1",
-		"vite": "^4.3.9"
+		"vite": "^4.3.9",
+		"vitest": "^0.33.0"
 	}
 }

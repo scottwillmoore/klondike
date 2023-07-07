@@ -6,6 +6,7 @@
 		"packages/*"
 	],
 	"scripts": {
+		"benchmark": "turbo benchmark",
 		"build": "turbo build",
 		"check": "run-s check:*",
 		"check:prettier": "prettier --check .",
@@ -14,6 +15,7 @@
 		"fix": "run-s fix:*",
 		"fix:prettier": "prettier --write .",
 		"fix:rome": "rome check --apply .",
+		"test": "turbo test",
 		"watch": "turbo watch"
 	},
 	"devDependencies": {

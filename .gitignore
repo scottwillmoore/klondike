@@ -1,6 +1,7 @@
 *.tsbuildinfo
 .turbo/
 .vite/
+.vitest/
 /.direnv/
 /node_modules/
 /result/
