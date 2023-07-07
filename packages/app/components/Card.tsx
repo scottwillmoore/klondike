@@ -1,74 +1,40 @@
-import { cx } from "classix";
+import { cx as classNames } from "classix";
 import { FunctionComponent } from "react";
 
-import css from "./Card.module.css";
+import * as models from "../models";
 
-export const ranks = {
-	ace: "A",
-	two: "2",
-	three: "3",
-	four: "4",
-	five: "5",
-	six: "6",
-	seven: "7",
-	eight: "8",
-	nine: "9",
-	ten: "T",
-	jack: "J",
-	queen: "Q",
-	king: "K",
-} as const;
-
-export type Rank = (typeof ranks)[keyof typeof ranks];
-
-export const suits = {
-	club: "♣",
-	diamond: "♦",
-	heart: "♥",
-	spade: "♠",
-} as const;
-
-export type Suit = (typeof suits)[keyof typeof suits];
-
-export const colors = {
-	red: "red",
-	black: "black",
-} as const;
-
-export type Color = (typeof colors)[keyof typeof colors];
-
-export const suitToColor: Record<Suit, Color> = {
-	[suits.club]: colors.black,
-	[suits.diamond]: colors.red,
-	[suits.heart]: colors.red,
-	[suits.spade]: colors.black,
-};
+import styles from "./Card.module.css";
 
 export type CardProps = {
-	rank: Rank;
-	suit: Suit;
+	card: models.Card;
 	faceDown?: boolean;
 };
 
 export const Card: FunctionComponent<CardProps> = ({
-	rank,
-	suit,
+	card,
 	faceDown = false,
 }) => {
-	const color = suitToColor[suit];
-	const id = rank + suit;
+	const color = models.Card.toColor(card);
+	const identifier = models.Card.toIdentifier(card);
+	const suit = models.Suit.toCharacter(card.suit);
 
 	return (
 		<div
-			className={cx(
-				css.card,
-				color === colors.black ? css.cardBlack : css.cardRed,
-				faceDown ? css.cardFaceDown : css.cardFaceUp
+			className={classNames(
+				styles.card,
+				color === models.Color.Black ? styles.cardBlack : styles.cardRed,
+				faceDown ? styles.cardFaceDown : styles.cardFaceUp
 			)}
 		>
-			<span className={cx(css.id, css.idTopLeft)}>{id}</span>
-			<span className={css.suit}>{suit}</span>
-			<span className={cx(css.id, css.idBottomRight)}>{id}</span>
+			<span className={classNames(styles.identifier, styles.identifierTopLeft)}>
+				{identifier}
+			</span>
+			<span className={styles.suit}>{suit}</span>
+			<span
+				className={classNames(styles.identifier, styles.identifierBottomRight)}
+			>
+				{identifier}
+			</span>
 		</div>
 	);
 };

@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
 
-import { Card, ranks, suits } from "./Card";
+import { Rank, Suit } from "../models";
+import { Card } from "./Card";
 import { FoundationPile } from "./FoundationPile";
 
 import css from "./Foundation.module.css";
@@ -9,11 +10,11 @@ export const Foundation: FunctionComponent = () => {
 	return (
 		<div className={css.foundation}>
 			<FoundationPile>
-				<Card rank={ranks.ace} suit={suits.club} />
+				<Card card={{ rank: Rank.Ace, suit: Suit.Club }} />
 			</FoundationPile>
 			<FoundationPile>
-				<Card rank={ranks.ace} suit={suits.diamond} faceDown={false} />
-				<Card rank={ranks.two} suit={suits.diamond} />
+				<Card card={{ rank: Rank.Ace, suit: Suit.Diamond }} faceDown />
+				<Card card={{ rank: Rank.Two, suit: Suit.Diamond }} />
 			</FoundationPile>
 			<FoundationPile></FoundationPile>
 			<FoundationPile></FoundationPile>

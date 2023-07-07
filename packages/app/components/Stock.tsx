@@ -1,14 +1,16 @@
 import { FunctionComponent } from "react";
 
-import { Card, ranks, suits } from "./Card";
+import { Rank, Suit } from "../models";
+import { Card } from "./Card";
+
 import css from "./Stock.module.css";
 
 export const Stock: FunctionComponent = () => {
 	return (
 		<div className={css.stock}>
-			<Card rank={ranks.seven} suit={suits.spade} faceDown />
-			<Card rank={ranks.five} suit={suits.heart} faceDown />
-			<Card rank={ranks.eight} suit={suits.club} />
+			<Card card={{ rank: Rank.Seven, suit: Suit.Spade }} faceDown />
+			<Card card={{ rank: Rank.Five, suit: Suit.Heart }} faceDown />
+			<Card card={{ rank: Rank.Eight, suit: Suit.Club }} />
 		</div>
 	);
 };

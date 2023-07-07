@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
 
-import { Card, ranks, suits } from "./Card";
+import { Rank, Suit } from "../models";
+import { Card } from "./Card";
 import { TableauPile } from "./TableauPile";
 
 import css from "./Tableau.module.css";
@@ -9,10 +10,10 @@ export const Tableau: FunctionComponent = () => {
 	return (
 		<div className={css.tableau}>
 			<TableauPile>
-				<Card rank={ranks.ten} suit={suits.spade} faceDown />
-				<Card rank={ranks.jack} suit={suits.diamond} faceDown />
-				<Card rank={ranks.queen} suit={suits.heart} />
-				<Card rank={ranks.king} suit={suits.spade} />
+				<Card card={{ rank: Rank.Ten, suit: Suit.Spade }} faceDown />
+				<Card card={{ rank: Rank.Jack, suit: Suit.Diamond }} faceDown />
+				<Card card={{ rank: Rank.King, suit: Suit.Spade }} />
+				<Card card={{ rank: Rank.Queen, suit: Suit.Heart }} />
 			</TableauPile>
 			<TableauPile></TableauPile>
 			<TableauPile></TableauPile>

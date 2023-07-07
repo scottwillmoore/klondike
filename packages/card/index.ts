@@ -40,7 +40,7 @@ export interface Card {
 }
 
 export interface FoundationPile {
-	topRank: Rank | undefined;
+	topRank: Rank | null;
 }
 
 export interface Foundation {
