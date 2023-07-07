@@ -1,4 +1,4 @@
-import { Rank } from "./";
+import { Rank } from ".";
 
 export interface FoundationPile {
 	topRank: Rank | null;

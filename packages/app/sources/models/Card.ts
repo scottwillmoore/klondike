@@ -1,4 +1,4 @@
-import { Color, Rank, Suit } from "./";
+import { Color, Rank, Suit } from ".";
 
 export interface Card {
 	rank: Rank;

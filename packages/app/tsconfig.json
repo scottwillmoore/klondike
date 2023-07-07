@@ -9,5 +9,5 @@
 		"moduleResolution": "Node",
 		"target": "ESNext"
 	},
-	"exclude": ["./dist/**"]
+	"include": ["./sources"]
 }

@@ -1,4 +1,4 @@
-import { Color } from "./";
+import { Color } from ".";
 
 export enum Suit {
 	Club = 0,

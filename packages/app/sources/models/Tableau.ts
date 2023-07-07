@@ -1,4 +1,4 @@
-import { Card } from "./";
+import { Card } from ".";
 
 export interface TableauPile {
 	cards: Card[];

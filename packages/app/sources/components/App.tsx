@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 
-import { Foundation, Stock, Tableau } from "./";
+import { Foundation, Stock, Tableau } from ".";
 
 import css from "./App.module.css";
 
