@@ -1,9 +1,9 @@
 import { FunctionComponent } from "react";
 
-// import * as models from "../models";
+import * as models from "../models";
 import { Rank, Suit } from "../models";
 import { ChildrenProps } from "../utilities";
-import { Card } from "./Card";
+import { Card } from ".";
 
 import css from "./Foundation.module.css";
 
@@ -14,12 +14,19 @@ const FoundationPile: FunctionComponent<FoundationPileProps> = ({ children }) =>
 };
 
 export type FoundationProps = {
-	// foundation: models.Foundation;
+	foundation: models.Foundation;
 };
 
-export const Foundation: FunctionComponent<FoundationProps> = () => {
+export const Foundation: FunctionComponent<FoundationProps> = ({ foundation }) => {
 	return (
 		<div className={css.foundation}>
+			{models.Foundation.map(foundation, (pile, suit) => (
+				<FoundationPile>
+					{/* An `enum` can be assigned `null`, `number` and `undefined`... */}
+					{/* The `topRank` property is `null`, but can be passed to `Card.of`... */}
+					<Card card={models.Card.of(pile.topRank, suit)} />
+				</FoundationPile>
+			))}
 			<FoundationPile>
 				<Card card={{ rank: Rank.Ace, suit: Suit.Club }} />
 			</FoundationPile>
