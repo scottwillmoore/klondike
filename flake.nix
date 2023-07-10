@@ -1,45 +1,68 @@
 {
   inputs = {
-    flake-utilities.url = "github:numtide/flake-utils";
+    flake-parts.url = "github:hercules-ci/flake-parts";
 
     nix-packages.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
-    rust-overlay.inputs.flake-utils.follows = "flake-utilities";
-    rust-overlay.inputs.nixpkgs.follows = "nix-packages";
+    nix-systems.url = "github:nix-systems/default";
+
     rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nix-packages";
   };
-  outputs = {
-    flake-utilities,
+  outputs = inputs @ {
+    flake-parts,
     nix-packages,
+    nix-systems,
     rust-overlay,
     ...
-  }:
-    flake-utilities.lib.eachDefaultSystem (system: let
-      packages = import nix-packages {
-        inherit system;
-        overlays = [
-          rust-overlay.overlays.default
-        ];
+  }: let
+    packagesModule = {
+      perSystem = {system, ...}: {
+        _module.args.packages = import nix-packages {
+          inherit system;
+          overlays = [
+            rust-overlay.overlays.default
+          ];
+        };
       };
-    in {
-      devShells.default = packages.mkShell {
-        name = "klondike";
-        nativeBuildInputs = with packages; [
-          binaryen
-          cargo-audit
-          cargo-edit
-          cargo-expand
-          cargo-release
-          cargo-watch
-          nodejs
-          (rustChannels.stable.complete.override {
-            targets = ["wasm32-unknown-unknown"];
-          })
-          twiggy
-          wabt
-          wasm-bindgen-cli
-          wasm-pack
-        ];
+    };
+
+    systemsModule = {
+      systems = import nix-systems;
+    };
+  in
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [
+        packagesModule
+        systemsModule
+      ];
+
+      perSystem = {packages, ...}: {
+        devShells.default = with packages;
+          mkShell {
+            name = "klondike";
+            nativeBuildInputs = [
+              # Node
+              nodejs
+
+              # Rust
+              cargo-audit
+              cargo-edit
+              cargo-expand
+              cargo-release
+              cargo-watch
+              (rustChannels.stable.complete.override {
+                targets = ["wasm32-unknown-unknown"];
+              })
+
+              # WebAssembly
+              binaryen
+              twiggy
+              wabt
+              wasm-bindgen-cli
+              wasm-pack
+            ];
+          };
       };
-    });
+    };
 }
