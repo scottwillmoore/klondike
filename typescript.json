@@ -1,13 +1,11 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"compilerOptions": {
-		"allowJs": true,
-		"checkJs": true,
+		"allowJs": false,
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
-		"incremental": true,
 		"noEmit": true,
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,

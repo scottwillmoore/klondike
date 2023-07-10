@@ -6,7 +6,11 @@
 		"test": "run-s test:*",
 		"test:sources": "vitest --run",
 		"test:types": "vitest typecheck --run",
-		"watch": "vite"
+		"watch": "run-s watch:build",
+		"watch:build": "vite",
+		"watch:test": "run-p watch:test:*",
+		"watch:test:sources": "vitest",
+		"watch:test:types": "vitest typecheck"
 	},
 	"dependencies": {
 		"@dnd-kit/core": "^6.0.8",

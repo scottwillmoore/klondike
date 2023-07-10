@@ -5,12 +5,12 @@ import { Rank, Suit } from "../models";
 import { ChildrenProps } from "../utilities";
 import { Card } from ".";
 
-import css from "./Foundation.module.css";
+import styles from "./Foundation.module.css";
 
 type FoundationPileProps = ChildrenProps;
 
 const FoundationPile: FunctionComponent<FoundationPileProps> = ({ children }) => {
-	return <div className={css.foundationPile}>{children}</div>;
+	return <div className={styles.foundationPile}>{children}</div>;
 };
 
 export type FoundationProps = {
@@ -19,7 +19,7 @@ export type FoundationProps = {
 
 export const Foundation: FunctionComponent<FoundationProps> = ({ foundation }) => {
 	return (
-		<div className={css.foundation}>
+		<div className={styles.foundation}>
 			{models.Foundation.map(foundation, (pile, suit) => (
 				<FoundationPile>
 					{/* An `enum` can be assigned `null`, `number` and `undefined`... */}
