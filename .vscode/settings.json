@@ -43,6 +43,27 @@
 			}
 		}
 	},
+	"files.readonlyInclude": {
+		"**/.turbo/**": true,
+		"**/.vite/**": true,
+		"**/.vitest/**": true,
+		"**/dist/**": true,
+		".direnv/**": true,
+		".git/**": true,
+		"node_modules/**": true,
+		"result/**": true,
+		"target/**": true
+	},
+	"emmet.syntaxProfiles": {
+		"jsx": {
+			"markup.attributes": {
+				"class*": "className"
+			},
+			"markup.valuePrefix": {
+				"class*": "styles"
+			}
+		}
+	},
 	"rust-analyzer.check.command": "clippy",
 	"rust-analyzer.server.path": "rust-analyzer",
 	"typescript.tsdk": "node_modules/typescript/lib"
