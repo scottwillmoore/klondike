@@ -9,8 +9,5 @@ export default {
 		cache: {
 			dir: "./.vitest",
 		},
-		typecheck: {
-			ignoreSourceErrors: true,
-		},
 	},
 } satisfies UserConfig;

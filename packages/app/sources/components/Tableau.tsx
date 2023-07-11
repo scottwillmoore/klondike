@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 
 import { Rank, Suit } from "../models";
-import { ChildrenProps } from "../utilities";
+import { ChildrenProps } from "../utilities/reactTypes";
 import { Card } from "./Card";
 
 import css from "./Tableau.module.css";

@@ -2,7 +2,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { FunctionComponent } from "react";
 
 import { cx } from "classix";
-import { ChildrenProps } from "../utilities/ChildrenProps";
+import { ChildrenProps } from "../utilities/reactTypes/ChildrenProps";
 import css from "./_Pile.module.css";
 
 export type PileProps = ChildrenProps & {

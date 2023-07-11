@@ -6,6 +6,8 @@ export * from "./Stock";
 export * from "./Suit";
 export * from "./Tableau";
 
+export * as default from ".";
+
 import { Foundation, Stock, Tableau } from "./";
 
 export interface State {

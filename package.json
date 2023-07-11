@@ -8,7 +8,7 @@
 	"scripts": {
 		"benchmark": "turbo benchmark",
 		"build": "turbo build",
-		"check": "run-s check:*",
+		"check": "run-s --continue-on-error check:*",
 		"check:prettier": "prettier --check .",
 		"check:rome": "rome check .",
 		"clean": "turbo clean",

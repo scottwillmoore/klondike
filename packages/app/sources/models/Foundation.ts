@@ -1,5 +1,5 @@
 import { Rank, Suit } from ".";
-import { Tuple } from "../utilities";
+import { Tuple } from "../utilities/types";
 
 export interface FoundationPile {
 	topRank: Rank | null;
