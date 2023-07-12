@@ -35,25 +35,6 @@
 	"[yaml]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
-	"nix.serverPath": "nil",
-	"nix.serverSettings": {
-		"nil": {
-			"formatting": {
-				"command": ["alejandra", "--quiet", "--quiet"]
-			}
-		}
-	},
-	"files.readonlyInclude": {
-		"**/.turbo/**": true,
-		"**/.vite/**": true,
-		"**/.vitest/**": true,
-		"**/dist/**": true,
-		".direnv/**": true,
-		".git/**": true,
-		"node_modules/**": true,
-		"result/**": true,
-		"target/**": true
-	},
 	"emmet.syntaxProfiles": {
 		"jsx": {
 			"markup.attributes": {
@@ -61,6 +42,28 @@
 			},
 			"markup.valuePrefix": {
 				"class*": "styles"
+			}
+		}
+	},
+	"files.readonlyInclude": {
+		"**/.turbo/**": true,
+		"**/.vite/**": true,
+		"**/.vitest/**": true,
+		"**/Cargo.lock": true,
+		"**/dist/**": true,
+		"**/flake.lock": true,
+		"**/package-lock.json": true,
+		".direnv/**": true,
+		".git/**": true,
+		"node_modules/**": true,
+		"result/**": true,
+		"target/**": true
+	},
+	"nix.serverPath": "nil",
+	"nix.serverSettings": {
+		"nil": {
+			"formatting": {
+				"command": ["alejandra", "--quiet", "--quiet"]
 			}
 		}
 	},

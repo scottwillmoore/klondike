@@ -47,7 +47,7 @@ export namespace Suit {
 		}
 	}
 
-	// rome-ignore lint/suspicious/noShadowRestrictedNames: Not a problem in a namespace.
+	// rome-ignore lint/suspicious/noShadowRestrictedNames:
 	export function toString(suit: Suit): string {
 		switch (suit) {
 			case Suit.Club:

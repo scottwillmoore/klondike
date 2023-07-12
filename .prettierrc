@@ -2,5 +2,6 @@
 	"$schema": "https://json.schemastore.org/prettierrc",
 	"endOfLine": "auto",
 	"printWidth": 100,
-	"useTabs": true
+	"useTabs": true,
+	"plugins": ["prettier-plugin-organize-imports"]
 }
