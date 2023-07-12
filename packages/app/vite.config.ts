@@ -1,10 +1,11 @@
 import { UserConfig } from "vite";
 
-import createReactPlugin from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react";
+import tsconfigPaths from "vite-plugin-tsconfig-paths";
 
 export default {
 	cacheDir: "./.vite",
-	plugins: [createReactPlugin()],
+	plugins: [react(), tsconfigPaths()],
 	test: {
 		cache: {
 			dir: "./.vitest",

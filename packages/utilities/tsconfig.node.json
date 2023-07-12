@@ -1,0 +1,13 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"compilerOptions": {
+		"composite": true,
+		"isolatedModules": true,
+		"lib": ["ESNext"],
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"target": "ESNext",
+		"types": ["@types/node", "vitest/config"]
+	},
+	"include": ["./vite.config.ts"]
+}

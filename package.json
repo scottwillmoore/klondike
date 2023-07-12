@@ -1,6 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package",
 	"private": true,
+	"name": "klondike",
 	"version": "0.0.0",
 	"workspaces": [
 		"packages/*"

@@ -1,0 +1,14 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "../../typescript.json",
+	"compilerOptions": {
+		"isolatedModules": true,
+		"lib": ["ESNext"],
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"target": "ESNext",
+		"types": ["vite/client"]
+	},
+	"include": ["./sources"],
+	"references": [{ "path": "./tsconfig.node.json" }]
+}

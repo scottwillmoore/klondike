@@ -1,9 +1,13 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { greet } from "@klondike/utilities";
+
 import { App } from "./components/App";
 
 import "./index.css";
+
+console.log(greet("Scott"));
 
 const rootElement = document.getElementById("root");
 if (rootElement == null) {

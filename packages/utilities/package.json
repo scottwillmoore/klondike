@@ -1,26 +1,25 @@
 {
 	"$schema": "https://json.schemastore.org/package",
-	"name": "@klondike/app",
+	"name": "@klondike/utilities",
+	"type": "module",
+	"exports": {
+		"import": "./dist/index.js",
+		"require": "./dist/index.cjs",
+		"types": "./dist/index.d.ts"
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"scripts": {
 		"build": "vite build",
 		"clean": "rimraf ./.turbo ./.vite ./.vitest ./dist",
 		"test": "run-s --continue-on-error test:*",
 		"test:sources": "vitest --run",
-		"test:types": "vitest typecheck --run",
-		"watch": "vite"
-	},
-	"dependencies": {
-		"@dnd-kit/core": "^6.0.8",
-		"@klondike/utilities": "*",
-		"classix": "^2.1.33",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"test:types": "vitest typecheck --run"
 	},
 	"devDependencies": {
-		"@types/react": "^18.2.14",
-		"@types/react-dom": "^18.2.6",
-		"@vitejs/plugin-react": "^4.0.1",
 		"vite": "^4.3.9",
+		"vite-plugin-dts": "^3.2.0",
 		"vite-plugin-tsconfig-paths": "^1.3.1",
 		"vitest": "^0.33.0"
 	}
