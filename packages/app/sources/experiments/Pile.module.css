@@ -1,0 +1,15 @@
+.pile {
+	cursor: grab;
+}
+
+.pileDisabled {
+	cursor: unset;
+}
+
+.pileGrabbed {
+	cursor: grabbing;
+}
+
+.pile > * + * {
+	margin-top: calc(-128px * 1.4 + 40px);
+}

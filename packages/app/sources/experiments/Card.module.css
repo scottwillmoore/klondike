@@ -1,0 +1,72 @@
+:root {
+	--card-background-color: hsl(0, 0%, 100%);
+	--card-border-color: hsl(0, 0%, 90%);
+	--card-color-black: hsl(0, 0%, 20%);
+	--card-color-red: hsl(0, 80%, 40%);
+}
+
+.card {
+	position: relative;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	width: 128px;
+	height: calc(128px * 1.4);
+
+	border-color: var(--card-border-color);
+	border-radius: 8px;
+	border-width: 1px;
+	box-shadow: 0 2px 4px hsla(0, 0%, 0%, 0.1);
+	font-family: monospace;
+
+	touch-action: none;
+	user-select: none;
+}
+
+.cardBlack {
+	color: var(--card-color-black);
+}
+
+.cardRed {
+	color: var(--card-color-red);
+}
+
+.cardFaceDown {
+	background-color: color-mix(in hsl shorter hue, var(--card-background-color), black 2%);
+}
+
+.cardFaceDown.cardRed {
+	color: color-mix(in hsl shorter hue, var(--card-color-red), black 20%);
+}
+
+.cardFaceDown.cardBlack {
+	color: color-mix(in hsl shorter hue, var(--card-color-black), white 10%);
+}
+
+.cardFaceUp {
+	background-color: var(--card-background-color);
+}
+
+.suit {
+	font-size: 64px;
+}
+
+.id {
+	position: absolute;
+
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.idTopLeft {
+	top: 8px;
+	left: 8px;
+}
+
+.idBottomRight {
+	bottom: 8px;
+	right: 8px;
+}

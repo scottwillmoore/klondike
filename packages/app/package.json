@@ -13,6 +13,7 @@
 		"@dnd-kit/core": "^6.0.8",
 		"@klondike/utilities": "*",
 		"classix": "^2.1.33",
+		"clsx": "^1.2.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
 	},
